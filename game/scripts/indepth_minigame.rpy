@@ -13,19 +13,19 @@
             self.COURT_TOP = 129
             self.COURT_BOTTOM = 650
 
-            self.paddle = Solid("#ffffff", xsize=self.PADDLE_WIDTH, ysize=self.PADDLE_HEIGHT)
-            self.ball = Solid("#ffffff", xsize=self.BALL_WIDTH, ysize=self.BALL_HEIGHT)
+            self.paddle = Image("images/paddles/paddle_red_02.png")
+            self.ball = Image("images/balls/ball_white.png")
 
             self.stuck = True
-            self.playery = (self.COURT_BOTTOM - self.COURT_TOP) / 2
-            self.computery = self.playery
-            self.computerspeed = 380.0
+            self.player_y = (self.COURT_BOTTOM - self.COURT_TOP) / 2
+            self.computer_y = self.player_y
+            self.computer_speed = 380.0
 
-            self.bx = self.PADDLE_X + self.PADDLE_WIDTH + 10
-            self.by = self.playery
+            self.ball_x = self.PADDLE_X + self.PADDLE_WIDTH + 10
+            self.ball_y = self.player_y
             self.bdx = .5
             self.bdy = .5
-            self.bspeed = 350.0
+            self.ball_speed = 1000.0
 
             self.oldst = None
             self.winner = None
@@ -42,31 +42,34 @@
             dtime = st - self.oldst
             self.oldst = st
 
-            speed = dtime * self.bspeed
-            oldbx = self.bx
+            speed = dtime * self.ball_speed
+            oldbx = self.ball_x
 
             if self.stuck:
-                self.by = self.playery
+                self.ball_y = self.player_y
             else:
-                self.bx += self.bdx * speed
-                self.by += self.bdy * speed
+                self.ball_x += self.bdx * speed
+                self.ball_y += self.bdy * speed
 
-            cspeed = self.computerspeed * dtime
-            if abs(self.by - self.computery) <= cspeed:
-                self.computery = self.by
+            cspeed = self.computer_speed * dtime
+
+            if abs(self.ball_y - self.computer_y) <= cspeed:
+                self.computer_y = self.ball_y
             else:
-                self.computery += cspeed * (self.by - self.computery) / abs(self.by - self.computery)
+                self.computer_y += cspeed * (self.ball_y - self.computer_y) / abs(self.ball_y - self.computer_y)
 
             ball_top = self.COURT_TOP + self.BALL_HEIGHT / 2
-            if self.by < ball_top:
-                self.by = ball_top + (ball_top - self.by)
+
+            if self.ball_y < ball_top:
+                self.ball_y = ball_top + (ball_top - self.ball_y)
                 self.bdy = -self.bdy
                 if not self.stuck:
                     renpy.sound.play("pong_beep.opus", channel=0)
 
             ball_bot = self.COURT_BOTTOM - self.BALL_HEIGHT / 2
-            if self.by > ball_bot:
-                self.by = ball_bot - (self.by - ball_bot)
+
+            if self.ball_y > ball_bot:
+                self.ball_y = ball_bot - (self.ball_y - ball_bot)
                 self.bdy = -self.bdy
                 if not self.stuck:
                     renpy.sound.play("pong_beep.opus", channel=0)
@@ -75,30 +78,32 @@
                 pi = renpy.render(self.paddle, width, height, st, at)
                 r.blit(pi, (int(px), int(py - self.PADDLE_HEIGHT / 2)))
 
-                if py - self.PADDLE_HEIGHT / 2 <= self.by <= py + self.PADDLE_HEIGHT / 2:
+                if py - self.PADDLE_HEIGHT / 2 <= self.ball_y <= py + self.PADDLE_HEIGHT / 2:
+                    
                     hit = False
-                    if oldbx >= hotside >= self.bx:
-                        self.bx = hotside + (hotside - self.bx)
+
+                    if oldbx >= hotside >= self.ball_x:
+                        self.ball_x = hotside + (hotside - self.ball_x)
                         self.bdx = -self.bdx
                         hit = True
-                    elif oldbx <= hotside <= self.bx:
-                        self.bx = hotside - (self.bx - hotside)
+                    elif oldbx <= hotside <= self.ball_x:
+                        self.ball_x = hotside - (self.ball_x - hotside)
                         self.bdx = -self.bdx
                         hit = True
                     if hit:
                         renpy.sound.play("pong_boop.opus", channel=1)
-                        self.bspeed *= 1.10
+                        self.ball_speed *= 1.10
 
-            paddle(self.PADDLE_X, self.playery, self.PADDLE_X + self.PADDLE_WIDTH)
-            paddle(width - self.PADDLE_X - self.PADDLE_WIDTH, self.computery, width - self.PADDLE_X - self.PADDLE_WIDTH)
+            paddle(self.PADDLE_X, self.player_y, self.PADDLE_X + self.PADDLE_WIDTH)
+            paddle(width - self.PADDLE_X - self.PADDLE_WIDTH, self.computer_y, width - self.PADDLE_X - self.PADDLE_WIDTH)
 
             ball = renpy.render(self.ball, width, height, st, at)
-            r.blit(ball, (int(self.bx - self.BALL_WIDTH / 2), int(self.by - self.BALL_HEIGHT / 2)))
+            r.blit(ball, (int(self.ball_x - self.BALL_WIDTH / 2), int(self.ball_y - self.BALL_HEIGHT / 2)))
 
-            if self.bx < -50:
+            if self.ball_x < -50:
                 self.winner = "eileen"
                 renpy.timeout(0)
-            elif self.bx > width + 50:
+            elif self.ball_x > width + 50:
                 self.winner = "player"
                 renpy.timeout(0)
 
@@ -106,6 +111,7 @@
             return r
 
         def event(self, ev, x, y, st):
+            
             import pygame
 
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
@@ -115,7 +121,8 @@
 
             y = max(y, self.COURT_TOP)
             y = min(y, self.COURT_BOTTOM)
-            self.playery = y
+            
+            self.player_y = y
 
             if self.winner:
                 return self.winner
@@ -126,21 +133,14 @@
 screen pong():
     default pong = PongDisplayable()
 
-    add "#000000"
+    add "#090070"
+
+    add Solid("#d3e2ff"):
+        xalign 0.5
+        yalign 0.5
+        xysize (640, 1080)
 
     add pong
-
-    text "Player":
-        xpos 240
-        xanchor 0.5
-        ypos 25
-        size 40
-
-    text "CPU":
-        xpos (1280 - 240)
-        xanchor 0.5
-        ypos 25
-        size 40
 
     if pong.stuck:
         text "Click to begin":
