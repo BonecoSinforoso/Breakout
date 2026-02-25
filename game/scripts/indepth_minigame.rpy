@@ -8,7 +8,7 @@
             ### Constants
             self.PADDLE_WIDTH = 64
             self.PADDLE_HEIGHT = 32
-            self.PADDLE_Y = 500
+            self.PADDLE_Y = 900
 
             self.BALL_WIDTH = 15
             self.BALL_HEIGHT = 15
@@ -25,10 +25,10 @@
             self.player_x = 1920 / 2
 
             self.ball_x = self.player_x
-            self.ball_y = self.PADDLE_Y - 10
+            self.ball_y = 0
             self.ball_direction_x = .5
             self.ball_direction_y = -0.5
-            self.ball_speed = 1000.0
+            self.ball_speed = 500.0
 
             self.old_st = None
             self.winner = None
@@ -46,11 +46,11 @@
             self.old_st = st
 
             speed = delta_time * self.ball_speed
-            old_ball_x = self.ball_x
+            old_ball_y = self.ball_y
 
             if self.stuck:
                 self.ball_x = self.player_x
-                self.ball_y = self.PADDLE_Y - 10
+                self.ball_y = self.PADDLE_Y - 20
             else:
                 self.ball_x += self.ball_direction_x * speed
                 self.ball_y += self.ball_direction_y * speed
@@ -83,25 +83,25 @@
             def paddle(position_x, position_y, hotside):
                 
                 pi = renpy.render(self.paddle, width, height, st, at)
-                r.blit(pi, (int(position_x), int(position_y - self.PADDLE_HEIGHT / 2)))
+                r.blit(pi, (int(position_x - self.PADDLE_WIDTH / 2), int(position_y - self.PADDLE_HEIGHT / 2)))
 
-                if position_y - self.PADDLE_HEIGHT / 2 <= self.ball_y <= position_y + self.PADDLE_HEIGHT / 2:
+                if position_x - self.PADDLE_WIDTH / 2 <= self.ball_x <= position_x + self.PADDLE_WIDTH / 2:
                     
                     hit = False
 
-                    if old_ball_x >= hotside >= self.ball_x:
-                        self.ball_x = hotside + (hotside - self.ball_x)
-                        self.ball_direction_x = -self.ball_direction_x
+                    if old_ball_y >= hotside >= self.ball_y:
+                        self.ball_y = hotside - (self.ball_y - hotside)
+                        self.ball_direction_y = -self.ball_direction_y
                         hit = True
-                    elif old_ball_x <= hotside <= self.ball_x:
-                        self.ball_x = hotside - (self.ball_x - hotside)
-                        self.ball_direction_x = -self.ball_direction_x
+                    elif old_ball_y <= hotside <= self.ball_y:
+                        self.ball_y = hotside - (self.ball_y - hotside)
+                        self.ball_direction_y = -self.ball_direction_y
                         hit = True
                     if hit:
                         renpy.sound.play("pong_boop.opus", channel=1)
                         self.ball_speed *= 1.10
 
-            paddle(self.player_x, self.PADDLE_Y, self.PADDLE_Y - self.PADDLE_HEIGHT)
+            paddle(self.player_x, self.PADDLE_Y, self.PADDLE_Y - self.PADDLE_HEIGHT / 2)
 
             ball = renpy.render(self.ball, width, height, st, at)
             r.blit(ball, (int(self.ball_x - self.BALL_WIDTH / 2), int(self.ball_y - self.BALL_HEIGHT / 2)))
