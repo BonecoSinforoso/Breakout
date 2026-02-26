@@ -4,5 +4,9 @@
         "**/*.rpa": true,
         "**/*.rpymc": true,
         "**/cache/": true
-    }
+    },
+    "files.associations": {
+        "*.rpy": "renpy"
+    },
+    "python.analysis.ignore": ["**/*.rpy"]
 }
