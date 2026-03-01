@@ -26,7 +26,7 @@ init python:
             self.block_grid = BreakoutBlocks(COURT_LEFT, COURT_TOP)
 
         def visit(self):
-            block_frames = [f for frames in self.block_grid._frames.values() for f in frames]
+            block_frames = self.block_grid.get_all_frames()
             return [self.paddle, self.ball] + block_frames
 
         def _lose_life(self):
