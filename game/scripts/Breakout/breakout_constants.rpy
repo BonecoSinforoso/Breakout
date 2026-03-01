@@ -1,0 +1,12 @@
+init python:
+    
+    PADDLE_WIDTH = 64
+    PADDLE_HEIGHT = 32
+    PADDLE_Y = 900
+
+    BALL_WIDTH = 15
+    BALL_HEIGHT = 15
+
+    COURT_TOP = 10
+    COURT_LEFT = 1920 / 2 - 320
+    COURT_RIGHT = 1920 / 2 + 320
