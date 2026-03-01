@@ -6,8 +6,8 @@ init python:
 
         BLOCK_COLS = 8
         BLOCK_ROWS = 4
-        BLOCK_PADDING = 5
-        BLOCK_OFFSET_Y = 5
+        BLOCK_PADDING = 2
+        BLOCK_OFFSET_Y = 2
 
         # Mapa: linha -> classe do bloco
         # Altere aqui para mudar quais tipos aparecem em cada linha
@@ -58,7 +58,7 @@ init python:
             return result
 
         def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
-            hits = 0
+            score = 0
 
             for block in self.blocks:
                 if not block.active:
@@ -74,11 +74,10 @@ init python:
                 dist_y = ball_y - closest_y
 
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
-                    destroyed = block.hit()
+                    destroyed, points = block.hit()
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
-                    if destroyed:
-                        hits += 1
+                    score += points
 
                     overlap_x = (ball_w / 2) - abs(dist_x)
                     overlap_y = (ball_h / 2) - abs(dist_y)
@@ -88,7 +87,8 @@ init python:
                     else:
                         ball_dy = -ball_dy
 
-            return ball_dx, ball_dy, hits
+            return ball_dx, ball_dy, score
+
 
         def render(self, r, width, height, st, at):
             for block in self.blocks:
