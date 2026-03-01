@@ -4,10 +4,10 @@ init python:
 
         BLOCK_COLS = 8
         BLOCK_ROWS = 4
-        BLOCK_WIDTH = 70
-        BLOCK_HEIGHT = 25
+        BLOCK_WIDTH = 32
+        BLOCK_HEIGHT = 16
         BLOCK_PADDING = 5
-        BLOCK_OFFSET_Y = 80
+        BLOCK_OFFSET_Y = 5
 
         BLOCK_FRAME_PATHS = [
             "images/blocks/small/block_small_red_00.png",
