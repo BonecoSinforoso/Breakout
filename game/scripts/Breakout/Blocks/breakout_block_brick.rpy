@@ -6,6 +6,9 @@ init python:
         HEIGHT = 32
         HP = 5  # um frame por ponto de vida
 
+        POINTS_HIT = 5
+        POINTS_DESTROY = 50
+
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",
         ]

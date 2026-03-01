@@ -2,15 +2,17 @@
 init python:
 
     class BlockBase:
-        WIDTH  = 32
+        WIDTH = 32
         HEIGHT = 16
-        HP     = 1
+        HP = 1
+        
+        POINTS_HIT     = 0
+        POINTS_DESTROY = 10
 
         BLOCK_FPS      = 8
         ANIM_DURATION  = 1.0
         ANIM_DELAY     = 3.0
 
-        # Subclasses devem preencher: { "color": ["sprite_00.png", ...] }
         BLOCK_SPRITES = {}
 
         def __init__(self, x, y, color):
@@ -28,9 +30,10 @@ init python:
             return self.hp > 0
 
         def hit(self):
-            """Recebe um hit. Retorna True se o bloco foi destruido."""
             self.hp -= 1
-            return not self.active
+            destroyed = not self.active
+            points = self.POINTS_DESTROY if destroyed else self.POINTS_HIT
+            return destroyed, points
 
         def get_frames(self):
             return self._frames[self.color]

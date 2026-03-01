@@ -89,13 +89,13 @@ init python:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             # Colisão e render dos blocos
-            self.ball_direction_x, self.ball_direction_y, hits = self.block_grid.check_collision(
+            self.ball_direction_x, self.ball_direction_y, score = self.block_grid.check_collision(
                 self.ball_x, self.ball_y,
                 BALL_WIDTH, BALL_HEIGHT,
                 self.ball_direction_x, self.ball_direction_y
             )
 
-            self.score += hits * 10
+            self.score += score
 
             self.block_grid.render(r, width, height, st, at)
 
