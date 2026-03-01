@@ -20,8 +20,14 @@ screen pong():
     if pong.stuck:
         text "Click to begin":
             xalign 0.5
-            ypos 50
+            ypos 540
             size 40
+
+    add "images/heart/heart_0[pong.lives].png":
+        xalign 0.5
+        yalign 0.5
+        xoffset -100
+        yoffset -200
 
     text "Score: [pong.score]":
         xalign 0.5
