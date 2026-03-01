@@ -19,11 +19,13 @@ init python:
         ]
 
         BLOCK_FPS = 8
+        ANIM_DURATION = 1.0
+        ANIM_DELAY = 3.0
 
         def __init__(self, court_left, court_top):
             self.court_left = court_left
             self.court_top = court_top
-            self.blocks = []            
+            self.blocks = []
             self._frames = [Image(p) for p in self.BLOCK_FRAME_PATHS]
             self.reset()
 
@@ -39,7 +41,6 @@ init python:
                         "y": self.court_top + self.BLOCK_OFFSET_Y + row * (self.BLOCK_HEIGHT + self.BLOCK_PADDING),
                         "active": True,
                         "row": row,
-                        "anim_offset": (row * self.BLOCK_COLS + col) * (1.0 / (self.BLOCK_COLS * self.BLOCK_ROWS))
                     })
 
         def all_destroyed(self):
@@ -77,12 +78,22 @@ init python:
             return ball_dx, ball_dy, hits
 
         def render(self, r, width, height, st, at):
+            cycle = self.ANIM_DURATION + self.ANIM_DELAY
+            # Posição dentro do ciclo atual (0.0 até cycle)
+            t = st % cycle
+
+            if t < self.ANIM_DURATION:
+                # Dentro da janela de animação: calcula o frame normalmente
+                frame_index = int(t * self.BLOCK_FPS) % len(self._frames)
+            else:
+                # Dentro do delay: trava no frame 0
+                frame_index = 0
+
+            surf = self._frames[frame_index]
+
             for block in self.blocks:
                 if not block["active"]:
                     continue
-
-                frame_index = int((st + block["anim_offset"]) * self.BLOCK_FPS) % len(self._frames)
-                surf = self._frames[frame_index]
 
                 rendered = renpy.render(surf, self.BLOCK_WIDTH, self.BLOCK_HEIGHT, st, at)
                 r.blit(rendered, (int(block["x"]), int(block["y"])))
