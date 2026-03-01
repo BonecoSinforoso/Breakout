@@ -18,7 +18,7 @@ init python:
             self.ball_y = 0
             self.ball_direction_x = 0.5
             self.ball_direction_y = -0.5
-            self.ball_speed = 500.0
+            self.ball_speed = BALL_SPEED_DEFAULT
 
             self.old_st = None
             self.winner = None
@@ -38,7 +38,7 @@ init python:
             else:
                 # Devolve a bola ao jogador
                 self.stuck = True
-                self.ball_speed = 500.0
+                self.ball_speed = BALL_SPEED_DEFAULT
                 self.ball_direction_x = 0.5
                 self.ball_direction_y = -0.5
                 self.ball_x = self.player_x
@@ -115,9 +115,9 @@ init python:
                         self.ball_y = hotside - (self.ball_y - hotside)
                         self.ball_direction_y = -self.ball_direction_y
                         hit = True
+                    
                     if hit:
                         renpy.sound.play("breakout_ball_collision.wav", channel=0)
-                        self.ball_speed *= 1.10
 
             paddle_fn(self.player_x, PADDLE_Y, PADDLE_Y - PADDLE_HEIGHT / 2)
 
