@@ -8,12 +8,23 @@ init python:
         BLOCK_HEIGHT = 25
         BLOCK_PADDING = 5
         BLOCK_OFFSET_Y = 80
-        ROW_COLORS = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71"]
+
+        BLOCK_FRAME_PATHS = [
+            "images/blocks/small/block_small_red_00.png",
+            "images/blocks/small/block_small_red_01.png",
+            "images/blocks/small/block_small_red_02.png",
+            "images/blocks/small/block_small_red_03.png",
+            "images/blocks/small/block_small_red_04.png",
+            "images/blocks/small/block_small_red_05.png",
+        ]
+
+        BLOCK_FPS = 8
 
         def __init__(self, court_left, court_top):
             self.court_left = court_left
             self.court_top = court_top
-            self.blocks = []
+            self.blocks = []            
+            self._frames = [Image(p) for p in self.BLOCK_FRAME_PATHS]
             self.reset()
 
         def reset(self):
@@ -27,7 +38,8 @@ init python:
                         "x": start_x + col * (self.BLOCK_WIDTH + self.BLOCK_PADDING),
                         "y": self.court_top + self.BLOCK_OFFSET_Y + row * (self.BLOCK_HEIGHT + self.BLOCK_PADDING),
                         "active": True,
-                        "row": row
+                        "row": row,
+                        "anim_offset": (row * self.BLOCK_COLS + col) * (1.0 / (self.BLOCK_COLS * self.BLOCK_ROWS))
                     })
 
         def all_destroyed(self):
@@ -69,7 +81,8 @@ init python:
                 if not block["active"]:
                     continue
 
-                color = self.ROW_COLORS[block["row"] % len(self.ROW_COLORS)]
-                surf = Solid(color, xsize=int(self.BLOCK_WIDTH), ysize=int(self.BLOCK_HEIGHT))
-                rendered = renpy.render(surf, width, height, st, at)
+                frame_index = int((st + block["anim_offset"]) * self.BLOCK_FPS) % len(self._frames)
+                surf = self._frames[frame_index]
+
+                rendered = renpy.render(surf, self.BLOCK_WIDTH, self.BLOCK_HEIGHT, st, at)
                 r.blit(rendered, (int(block["x"]), int(block["y"])))

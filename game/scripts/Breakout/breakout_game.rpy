@@ -21,11 +21,11 @@ init python:
 
             self.old_st = None
             self.winner = None
-            
+
             self.block_grid = BreakoutBlocks(COURT_LEFT, COURT_TOP)
 
         def visit(self):
-            return [ self.paddle, self.ball ]
+            return [self.paddle, self.ball] + self.block_grid._frames
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -46,9 +46,9 @@ init python:
                 self.ball_x += self.ball_direction_x * speed
                 self.ball_y += self.ball_direction_y * speed
 
-            ball_top   = COURT_TOP   + BALL_HEIGHT / 2
-            ball_left  = COURT_LEFT  + BALL_WIDTH  / 2
-            ball_right = COURT_RIGHT - BALL_WIDTH  / 2
+            ball_top = COURT_TOP + BALL_HEIGHT / 2
+            ball_left = COURT_LEFT + BALL_WIDTH / 2
+            ball_right = COURT_RIGHT - BALL_WIDTH / 2
 
             if self.ball_y < ball_top:
                 self.ball_y = ball_top + (ball_top - self.ball_y)
@@ -131,7 +131,6 @@ init python:
                 return self.winner
             else:
                 raise renpy.IgnoreEvent()
-
 
 label play_pong:
     window hide
