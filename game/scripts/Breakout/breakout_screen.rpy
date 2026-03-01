@@ -25,9 +25,9 @@ screen pong():
 
     add "images/heart/heart_0[pong.lives].png":
         xalign 0.5
-        yalign 0.5
-        xoffset -100
-        yoffset -200
+        yalign 0
+        xoffset -350
+        yoffset 10
 
     text "Score: [pong.score]":
         xalign 0.5
