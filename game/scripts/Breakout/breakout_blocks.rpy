@@ -34,10 +34,8 @@ init python:
             return all(not b["active"] for b in self.blocks)
 
         def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
-            """
-            Retorna (novo_dx, novo_dy) após checar colisão com todos os blocos.
-            Destrói o bloco atingido.
-            """
+            hits = 0
+
             for block in self.blocks:
                 if not block["active"]:
                     continue
@@ -53,7 +51,8 @@ init python:
 
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
                     block["active"] = False
-                    renpy.sound.play("pong_beep.opus", channel=0)
+                    renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                    hits += 1
 
                     overlap_x = (ball_w / 2) - abs(dist_x)
                     overlap_y = (ball_h / 2) - abs(dist_y)
@@ -63,12 +62,13 @@ init python:
                     else:
                         ball_dy = -ball_dy
 
-            return ball_dx, ball_dy
+            return ball_dx, ball_dy, hits
 
         def render(self, r, width, height, st, at):
             for block in self.blocks:
                 if not block["active"]:
                     continue
+
                 color = self.ROW_COLORS[block["row"] % len(self.ROW_COLORS)]
                 surf = Solid(color, xsize=int(self.BLOCK_WIDTH), ysize=int(self.BLOCK_HEIGHT))
                 rendered = renpy.render(surf, width, height, st, at)

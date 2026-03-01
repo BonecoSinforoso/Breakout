@@ -10,6 +10,7 @@ init python:
             self.ball = Image("images/balls/ball_white.png")
 
             self.stuck = True
+            self.score = 0
             self.player_x = 1920 / 2
 
             self.ball_x = self.player_x
@@ -53,26 +54,29 @@ init python:
                 self.ball_y = ball_top + (ball_top - self.ball_y)
                 self.ball_direction_y = -self.ball_direction_y
                 if not self.stuck:
-                    renpy.sound.play("pong_beep.opus", channel=0)
+                    renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             if self.ball_x < ball_left:
                 self.ball_x = ball_left + (ball_left - self.ball_x)
                 self.ball_direction_x = -self.ball_direction_x
                 if not self.stuck:
-                    renpy.sound.play("pong_beep.opus", channel=0)
+                    renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             if self.ball_x > ball_right:
                 self.ball_x = ball_right - (self.ball_x - ball_right)
                 self.ball_direction_x = -self.ball_direction_x
                 if not self.stuck:
-                    renpy.sound.play("pong_beep.opus", channel=0)
+                    renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             # Colisão e render dos blocos
-            self.ball_direction_x, self.ball_direction_y = self.block_grid.check_collision(
+            self.ball_direction_x, self.ball_direction_y, hits = self.block_grid.check_collision(
                 self.ball_x, self.ball_y,
                 BALL_WIDTH, BALL_HEIGHT,
                 self.ball_direction_x, self.ball_direction_y
             )
+
+            self.score += hits * 10
+
             self.block_grid.render(r, width, height, st, at)
 
             # paddle_fn com corpo completo da colisão
@@ -82,7 +86,7 @@ init python:
 
                 if position_x - PADDLE_WIDTH / 2 <= self.ball_x <= position_x + PADDLE_WIDTH / 2:
                     hit = False
-                    
+
                     if old_ball_y >= hotside >= self.ball_y:
                         self.ball_y = hotside - (self.ball_y - hotside)
                         self.ball_direction_y = -self.ball_direction_y
@@ -92,7 +96,7 @@ init python:
                         self.ball_direction_y = -self.ball_direction_y
                         hit = True
                     if hit:
-                        renpy.sound.play("pong_boop.opus", channel=1)
+                        renpy.sound.play("breakout_ball_collision.wav", channel=0)
                         self.ball_speed *= 1.10
 
             paddle_fn(self.player_x, PADDLE_Y, PADDLE_Y - PADDLE_HEIGHT / 2)
@@ -129,25 +133,6 @@ init python:
                 raise renpy.IgnoreEvent()
 
 
-screen pong():
-    default pong = PongDisplayable()
-
-    add "#090070"
-
-    add Solid("#d3e2ff"):
-        xalign 0.5
-        yalign 0.5
-        xysize (640, 1080)
-
-    add pong
-
-    if pong.stuck:
-        text "Click to begin":
-            xalign 0.5
-            ypos 50
-            size 40
-
-
 label play_pong:
     window hide
     $ quick_menu = False
@@ -158,7 +143,7 @@ label play_pong:
     window show
 
     if _return == "eileen":
-        "I win!"
+        "You lose!"
     else:
         "You win! Congratulations."
 
