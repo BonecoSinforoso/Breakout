@@ -30,19 +30,21 @@ init python:
 
         def reset(self):
             self.blocks = []
-            # Usa as dimensoes do primeiro tipo de bloco como referencia de grade
-            ref_class, _ = self.ROW_BLOCK_TYPES[0]
-            bw = ref_class.WIDTH
-            bh = ref_class.HEIGHT
-
-            total_w = self.BLOCK_COLS * (bw + self.BLOCK_PADDING) - self.BLOCK_PADDING
-            start_x = self.court_left + (640 - total_w) / 2
+            y = self.court_top + self.BLOCK_OFFSET_Y
 
             for row in range(self.BLOCK_ROWS):
+                block_class, color = self.ROW_BLOCK_TYPES[row % len(self.ROW_BLOCK_TYPES)]
+                bw = block_class.WIDTH
+                bh = block_class.HEIGHT
+
+                total_w = self.BLOCK_COLS * (bw + self.BLOCK_PADDING) - self.BLOCK_PADDING
+                start_x = self.court_left + (640 - total_w) / 2
+
                 for col in range(self.BLOCK_COLS):
                     x = start_x + col * (bw + self.BLOCK_PADDING)
-                    y = self.court_top + self.BLOCK_OFFSET_Y + row * (bh + self.BLOCK_PADDING)
-                    self.blocks.append(self._make_block(row, col, x, y))
+                    self.blocks.append(block_class(x, y, color))
+
+                y += bh + self.BLOCK_PADDING  # avança pelo bh REAL da linha atual
 
         def all_destroyed(self):
             return all(not b.active for b in self.blocks)
