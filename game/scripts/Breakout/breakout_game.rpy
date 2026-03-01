@@ -16,7 +16,7 @@ init python:
 
             self.ball_x = self.player_x
             self.ball_y = 0
-            self.ball_direction_x = .5
+            self.ball_direction_x = 0.5
             self.ball_direction_y = -0.5
             self.ball_speed = 500.0
 
@@ -31,6 +31,7 @@ init python:
 
         def _lose_life(self):
             self.lives -= 1
+
             if self.lives <= 0:
                 self.winner = "eileen"
                 renpy.timeout(0)
@@ -38,8 +39,10 @@ init python:
                 # Devolve a bola ao jogador
                 self.stuck = True
                 self.ball_speed = 500.0
-                self.ball_direction_x = .5
+                self.ball_direction_x = 0.5
                 self.ball_direction_y = -0.5
+                self.ball_x = self.player_x
+                self.ball_y = PADDLE_Y - 20
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -67,18 +70,21 @@ init python:
             if self.ball_y < ball_top:
                 self.ball_y = ball_top + (ball_top - self.ball_y)
                 self.ball_direction_y = -self.ball_direction_y
+
                 if not self.stuck:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             if self.ball_x < ball_left:
                 self.ball_x = ball_left + (ball_left - self.ball_x)
                 self.ball_direction_x = -self.ball_direction_x
+
                 if not self.stuck:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             if self.ball_x > ball_right:
                 self.ball_x = ball_right - (self.ball_x - ball_right)
                 self.ball_direction_x = -self.ball_direction_x
+
                 if not self.stuck:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
