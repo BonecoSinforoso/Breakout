@@ -1,3 +1,5 @@
+# atualmente responsavel por gerenciar os blocos
+# TODO: futuramente, vai acessar os tipos de bloco
 init python:
 
     class BreakoutBlocks:
@@ -13,16 +15,8 @@ init python:
         ANIM_DURATION = 1.0
         ANIM_DELAY = 3.0
 
-        # Frames por "tipo" de bloco.
+        # Frames por cor de bloco pequeno
         BLOCK_SPRITES = {
-            "red": [
-                "images/blocks/small/block_small_red_00.png",
-                "images/blocks/small/block_small_red_01.png",
-                "images/blocks/small/block_small_red_02.png",
-                "images/blocks/small/block_small_red_03.png",
-                "images/blocks/small/block_small_red_04.png",
-                "images/blocks/small/block_small_red_05.png",
-            ],
             "blue": [
                 "images/blocks/small/block_small_blue_00.png",
                 "images/blocks/small/block_small_blue_01.png",
@@ -31,9 +25,81 @@ init python:
                 "images/blocks/small/block_small_blue_04.png",
                 "images/blocks/small/block_small_blue_05.png",
             ],
+            "brown": [
+                "images/blocks/small/block_small_brown_00.png",
+                "images/blocks/small/block_small_brown_01.png",
+                "images/blocks/small/block_small_brown_02.png",
+                "images/blocks/small/block_small_brown_03.png",
+                "images/blocks/small/block_small_brown_04.png",
+                "images/blocks/small/block_small_brown_05.png",
+            ],
+            "cyan": [
+                "images/blocks/small/block_small_cyan_00.png",
+                "images/blocks/small/block_small_cyan_01.png",
+                "images/blocks/small/block_small_cyan_02.png",
+                "images/blocks/small/block_small_cyan_03.png",
+                "images/blocks/small/block_small_cyan_04.png",
+                "images/blocks/small/block_small_cyan_05.png",
+            ],
+            "gray": [
+                "images/blocks/small/block_small_gray_00.png",
+                "images/blocks/small/block_small_gray_01.png",
+                "images/blocks/small/block_small_gray_02.png",
+                "images/blocks/small/block_small_gray_03.png",
+                "images/blocks/small/block_small_gray_04.png",
+                "images/blocks/small/block_small_gray_05.png",
+            ],
+            "green": [
+                "images/blocks/small/block_small_green_00.png",
+                "images/blocks/small/block_small_green_01.png",
+                "images/blocks/small/block_small_green_02.png",
+                "images/blocks/small/block_small_green_03.png",
+                "images/blocks/small/block_small_green_04.png",
+                "images/blocks/small/block_small_green_05.png",
+            ],
+            "orange": [
+                "images/blocks/small/block_small_orange_00.png",
+                "images/blocks/small/block_small_orange_01.png",
+                "images/blocks/small/block_small_orange_02.png",
+                "images/blocks/small/block_small_orange_03.png",
+                "images/blocks/small/block_small_orange_04.png",
+                "images/blocks/small/block_small_orange_05.png",
+            ],
+            "pink": [
+                "images/blocks/small/block_small_pink_00.png",
+                "images/blocks/small/block_small_pink_01.png",
+                "images/blocks/small/block_small_pink_02.png",
+                "images/blocks/small/block_small_pink_03.png",
+                "images/blocks/small/block_small_pink_04.png",
+                "images/blocks/small/block_small_pink_05.png",
+            ],
+            "red": [
+                "images/blocks/small/block_small_red_00.png",
+                "images/blocks/small/block_small_red_01.png",
+                "images/blocks/small/block_small_red_02.png",
+                "images/blocks/small/block_small_red_03.png",
+                "images/blocks/small/block_small_red_04.png",
+                "images/blocks/small/block_small_red_05.png",
+            ],
+            "shocking": [
+                "images/blocks/small/block_small_shocking_00.png",
+                "images/blocks/small/block_small_shocking_01.png",
+                "images/blocks/small/block_small_shocking_02.png",
+                "images/blocks/small/block_small_shocking_03.png",
+                "images/blocks/small/block_small_shocking_04.png",
+                "images/blocks/small/block_small_shocking_05.png",
+            ],
+            "yellow": [
+                "images/blocks/small/block_small_yellow_00.png",
+                "images/blocks/small/block_small_yellow_01.png",
+                "images/blocks/small/block_small_yellow_02.png",
+                "images/blocks/small/block_small_yellow_03.png",
+                "images/blocks/small/block_small_yellow_04.png",
+                "images/blocks/small/block_small_yellow_05.png",
+            ],
         }
 
-        ROW_TYPES = ["blue", "blue", "red", "red"]
+        ROW_TYPES = ["blue", "brown", "yellow", "green"]
         # COL_TYPES = ["blue", "red", "blue", "red", "blue", "red", "blue", "red"]
 
         def __init__(self, court_left, court_top):
