@@ -20,8 +20,7 @@ init python:
         }
 
         def render(self, r, width, height, st, at):
-            frame_index = self.HP - 1
-            frames = self.get_frames()
-            surf = frames[frame_index % len(frames)]
+            frame_index = self.hp - 1
+            surf = self.get_frames()[frame_index]
             rendered = renpy.render(surf, self.WIDTH, self.HEIGHT, st, at)
             r.blit(rendered, (int(self.x), int(self.y)))
