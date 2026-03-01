@@ -11,6 +11,7 @@ init python:
 
             self.stuck = True
             self.score = 0
+            self.lives = 4
             self.player_x = 1920 / 2
 
             self.ball_x = self.player_x
@@ -25,8 +26,20 @@ init python:
             self.block_grid = BreakoutBlocks(COURT_LEFT, COURT_TOP)
 
         def visit(self):
-            block_frames = [f for frames in self.block_grid._frames.values() for f in frames]             
+            block_frames = [f for frames in self.block_grid._frames.values() for f in frames]
             return [self.paddle, self.ball] + block_frames
+
+        def _lose_life(self):
+            self.lives -= 1
+            if self.lives <= 0:
+                self.winner = "eileen"
+                renpy.timeout(0)
+            else:
+                # Devolve a bola ao jogador
+                self.stuck = True
+                self.ball_speed = 500.0
+                self.ball_direction_x = .5
+                self.ball_direction_y = -0.5
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -105,9 +118,9 @@ init python:
             ball = renpy.render(self.ball, width, height, st, at)
             r.blit(ball, (int(self.ball_x - BALL_WIDTH / 2), int(self.ball_y - BALL_HEIGHT / 2)))
 
-            # Fim de jogo
-            if self.ball_y > 1080:
-                self.winner = "eileen"
+            # vitoria/derrota
+            if self.ball_y > 1080 and not self.winner:
+                self._lose_life()
                 renpy.timeout(0)
             elif self.block_grid.all_destroyed():
                 self.winner = "player"
@@ -121,6 +134,11 @@ init python:
 
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
                 self.stuck = False
+
+            # Tecla Q: desiste e vai pro You Lose
+            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_q:
+                self.winner = "eileen"
+                renpy.timeout(0)
 
             renpy.restart_interaction()
 
