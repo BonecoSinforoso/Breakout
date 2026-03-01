@@ -25,7 +25,8 @@ init python:
             self.block_grid = BreakoutBlocks(COURT_LEFT, COURT_TOP)
 
         def visit(self):
-            return [self.paddle, self.ball] + self.block_grid._frames
+            block_frames = [f for frames in self.block_grid._frames.values() for f in frames]             
+            return [self.paddle, self.ball] + block_frames
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
