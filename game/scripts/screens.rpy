@@ -301,6 +301,8 @@ screen navigation():
 
             textbutton _("Start") action Start()
 
+            textbutton _("Leaderboard") action ShowMenu("breakout_leaderboard")
+
         else:
 
             textbutton _("History") action ShowMenu("history")

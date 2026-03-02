@@ -96,6 +96,7 @@ init python:
             )
 
             self.score += score
+            store.player_score = self.score
 
             self.block_grid.render(r, width, height, st, at)
 
@@ -166,10 +167,16 @@ label play_pong:
     $ quick_menu = True
     window show
 
+    $ highscores = persistent.highscores + [(player_name, player_score)]
+    $ highscores.sort(key=lambda x: x[1], reverse=True)  # ordena por score decrescente
+    $ persistent.highscores = highscores[:10]  # top 10
+
     if _return == "eileen":
         "You lose!"
+        "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations."
+        "[player_name] you scored [player_score] points"
 
     menu:
         "Play again?"
