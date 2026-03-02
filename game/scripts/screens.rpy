@@ -301,7 +301,7 @@ screen navigation():
 
             textbutton _("Start") action Start()
 
-            textbutton _("Leaderboard") action ShowMenu("leaderboard")
+            textbutton _("Leaderboard") action ShowMenu("breakout_leaderboard")
 
         else:
 
@@ -1536,29 +1536,6 @@ screen quick_menu():
             textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")
             textbutton _("Menu") action ShowMenu()
-
-
-screen leaderboard():
-    tag menu
-
-    use game_menu(_("Leaderboard"), scroll=None):
-
-        vbox:
-            xalign 0.5
-            yalign 0.5
-            spacing 20
-
-            text _("Top 10 Scores:") size 40 xalign 0.5
-
-            if not persistent.highscores:
-                text _("No scores yet!") xalign 0.5
-            else:
-                for i, (name, score) in enumerate(persistent.highscores[:10]):
-                    hbox:
-                        text f"#{i+1} " xalign 0.0
-                        text f"{name}: {score}" xalign 0.5
-
-            textbutton _("Back") action Return() xalign 0.5
 
 
 style window:
