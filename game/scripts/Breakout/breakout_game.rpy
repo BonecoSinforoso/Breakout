@@ -1,3 +1,4 @@
+# TODO: desacoplar excessos
 init python:
 
     class PongDisplayable(renpy.Displayable):
@@ -5,20 +6,30 @@ init python:
         def __init__(self):
             renpy.Displayable.__init__(self)
 
-            ### State
-            self.paddle = Image("images/paddles/paddle_red_02.png")
-            self.ball = Image("images/balls/ball_white.png")
-
-            self.stuck = True
-            self.score = 0
-            self.lives = 4
             self.player_x = 1920 / 2
 
+            # raquete
+            self.paddle = Image("images/paddles/paddle_red_02.png")
+            self.paddle_width = 64
+
+            self.paddle_default_width = 64
+            self.paddle_default_image = Image("images/paddles/paddle_red_02.png")
+            self.powerup_timer = 0
+
+            # bola
+            self.ball = Image("images/balls/ball_white.png")
             self.ball_x = self.player_x
             self.ball_y = 0
             self.ball_direction_x = 0.5
             self.ball_direction_y = -0.5
             self.ball_speed = BALL_SPEED_DEFAULT
+
+            # outros
+            self.powerups = []
+
+            self.stuck = True
+            self.score = 0
+            self.lives = 4
 
             self.old_st = None
             self.winner = None
@@ -52,6 +63,14 @@ init python:
 
             delta_time = st - self.old_st
             self.old_st = st
+
+            # timer powerup
+            if self.powerup_timer > 0:
+                self.powerup_timer -= delta_time
+                if self.powerup_timer <= 0:
+                    self.powerup_timer = 0
+                    self.paddle_width = self.paddle_default_width
+                    self.paddle = self.paddle_default_image
 
             speed = delta_time * self.ball_speed
             old_ball_y = self.ball_y
@@ -89,23 +108,51 @@ init python:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
             # Colisão e render dos blocos
-            self.ball_direction_x, self.ball_direction_y, score = self.block_grid.check_collision(
+            self.ball_direction_x, self.ball_direction_y, score, new_powerups = self.block_grid.check_collision(
                 self.ball_x, self.ball_y,
                 BALL_WIDTH, BALL_HEIGHT,
                 self.ball_direction_x, self.ball_direction_y
             )
+
+            self.powerups.extend(new_powerups)
 
             self.score += score
             store.player_score = self.score
 
             self.block_grid.render(r, width, height, st, at)
 
+            # Lógica dos Power-Ups
+            for pu in self.powerups[:]: # Iterando sobre uma cópia para remover com segurança
+                pu.update(delta_time)
+                pu.render(r, width, height, st, at)
+                
+                # Verifica colisão simples (AABB) com o paddle
+                pu_left = pu.x - pu.WIDTH / 2
+                pu_right = pu.x + pu.WIDTH / 2
+                pu_bottom = pu.y + pu.HEIGHT / 2
+                
+                paddle_left = self.player_x - self.paddle_width / 2
+                paddle_right = self.player_x + self.paddle_width / 2
+                paddle_top = PADDLE_Y - PADDLE_HEIGHT / 2
+                paddle_bottom = PADDLE_Y + PADDLE_HEIGHT / 2
+                
+                # Se colidiu com o paddle
+                if (pu_right >= paddle_left and pu_left <= paddle_right and 
+                    pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
+                    pu.apply_effect(self)
+                    self.powerups.remove(pu)
+                    # renpy.sound.play("powerup_catch.wav", channel=1) # Opcional: som ao pegar
+                
+                # Se saiu pela parte inferior da tela
+                elif pu.y > 1080:
+                    self.powerups.remove(pu)
+
             # paddle_fn com corpo completo da colisão
             def paddle_fn(position_x, position_y, hotside):
                 pi = renpy.render(self.paddle, width, height, st, at)
-                r.blit(pi, (int(position_x - PADDLE_WIDTH / 2), int(position_y - PADDLE_HEIGHT / 2)))
+                r.blit(pi, (int(position_x - self.paddle_width / 2), int(position_y - PADDLE_HEIGHT / 2)))
 
-                if position_x - PADDLE_WIDTH / 2 <= self.ball_x <= position_x + PADDLE_WIDTH / 2:
+                if position_x - self.paddle_width / 2 <= self.ball_x <= position_x + self.paddle_width / 2:
                     hit = False
 
                     if old_ball_y >= hotside >= self.ball_y:
