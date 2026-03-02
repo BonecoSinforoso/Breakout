@@ -59,6 +59,7 @@ init python:
 
         def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
             score = 0
+            hit_occurred = False
 
             for block in self.blocks:
                 if not block.active:
@@ -76,16 +77,17 @@ init python:
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
                     destroyed, points = block.hit()
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
-
                     score += points
 
-                    overlap_x = (ball_w / 2) - abs(dist_x)
-                    overlap_y = (ball_h / 2) - abs(dist_y)
+                    if not hit_occurred:
+                        hit_occurred = True
+                        overlap_x = (ball_w / 2) - abs(dist_x)
+                        overlap_y = (ball_h / 2) - abs(dist_y)
 
-                    if overlap_x < overlap_y:
-                        ball_dx = -ball_dx
-                    else:
-                        ball_dy = -ball_dy
+                        if overlap_x < overlap_y:
+                            ball_dx = -ball_dx
+                        else:
+                            ball_dy = -ball_dy
 
             return ball_dx, ball_dy, score
 
