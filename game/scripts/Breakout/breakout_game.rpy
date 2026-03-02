@@ -96,6 +96,7 @@ init python:
             )
 
             self.score += score
+            store.player_score = self.score
 
             self.block_grid.render(r, width, height, st, at)
 
@@ -168,8 +169,10 @@ label play_pong:
 
     if _return == "eileen":
         "You lose!"
+        "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations."
+        "[player_name] you scored [player_score] points"
 
     menu:
         "Play again?"
