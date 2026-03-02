@@ -141,13 +141,12 @@ init python:
                     pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
                     pu.apply_effect(self)
                     self.powerups.remove(pu)
-                    # renpy.sound.play("powerup_catch.wav", channel=1) # Opcional: som ao pegar
+                    renpy.sound.play("breakout_powerup.wav", channel=1)
                 
                 # Se saiu pela parte inferior da tela
                 elif pu.y > 1080:
                     self.powerups.remove(pu)
 
-            # paddle_fn com corpo completo da colisão
             def paddle_fn(position_x, position_y, hotside):
                 pi = renpy.render(self.paddle, width, height, st, at)
                 r.blit(pi, (int(position_x - self.paddle_width / 2), int(position_y - PADDLE_HEIGHT / 2)))
