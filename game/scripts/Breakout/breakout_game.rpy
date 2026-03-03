@@ -48,6 +48,7 @@ init python:
                 renpy.timeout(0)
             else:
                 # Devolve a bola ao jogador
+                renpy.sound.play("breakou_ball_out.wav", channel=2)
                 self.stuck = True
                 self.ball_speed = BALL_SPEED_DEFAULT
                 self.ball_direction_x = 0.5
@@ -107,7 +108,7 @@ init python:
                 if not self.stuck:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
-            # Colisão e render dos blocos
+            # Colisao e render dos blocos
             self.ball_direction_x, self.ball_direction_y, score, new_powerups = self.block_grid.check_collision(
                 self.ball_x, self.ball_y,
                 BALL_WIDTH, BALL_HEIGHT,
@@ -121,8 +122,8 @@ init python:
 
             self.block_grid.render(r, width, height, st, at)
 
-            # Lógica dos Power-Ups
-            for pu in self.powerups[:]: # Iterando sobre uma cópia para remover com segurança
+            # Logica dos PowerUps
+            for pu in self.powerups[:]: # Iterando sobre uma copia para remover com segurança
                 pu.update(delta_time)
                 pu.render(r, width, height, st, at)
                 
