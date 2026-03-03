@@ -1,7 +1,7 @@
 # TODO: desacoplar excessos
 init python:
 
-    class PongDisplayable(renpy.Displayable):
+    class BreakoutDisplayable(renpy.Displayable):
 
         def __init__(self):
             renpy.Displayable.__init__(self)
@@ -219,11 +219,11 @@ init python:
             else:
                 raise renpy.IgnoreEvent()
 
-label play_pong:
+label play_breakout:
     window hide
     $ quick_menu = False
 
-    call screen pong
+    call screen breakout
 
     $ quick_menu = True
     window show
@@ -242,8 +242,8 @@ label play_pong:
     menu:
         "Play again?"
         "Yes.":
-            jump play_pong
+            jump play_breakout
         "No.":
-            jump after_pong
+            jump after_breakout
 
     return

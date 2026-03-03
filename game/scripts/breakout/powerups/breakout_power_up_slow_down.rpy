@@ -1,5 +1,7 @@
 init python:
+
     class PowerUpSlowDown:
+        
         WIDTH = 32
         HEIGHT = 32
         SPEED = 150

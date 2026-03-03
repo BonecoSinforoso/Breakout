@@ -1,3 +1,4 @@
+# TODO mudar nome para BlocksManager
 # Gerencia o grid de blocos. Os tipos de bloco ficam em seus proprios arquivos.
 init python:
 
@@ -83,9 +84,10 @@ init python:
                     score += points
                     
                     if destroyed and random.random() < block.DROP_CHANCE:
-                        powerup_classes = [PowerUpIncreaseSize, PowerUpSlowDown]                        
-                        chosen_powerup = random.choice(powerup_classes)                        
-                        spawned_powerups.append(chosen_powerup(block.x + block.WIDTH/2, block.y + block.HEIGHT/2))
+                        new_pu = PowerUps.get_random_drop(block.x + block.WIDTH/2, block.y + block.HEIGHT/2)
+                        
+                        if new_pu is not None:
+                            spawned_powerups.append(new_pu)
 
                     if not hit_occurred:
                         hit_occurred = True

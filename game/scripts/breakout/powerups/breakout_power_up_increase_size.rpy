@@ -1,5 +1,7 @@
 init python:
+
     class PowerUpIncreaseSize:
+
         WIDTH = 32
         HEIGHT = 32
         SPEED = 150
@@ -32,4 +34,4 @@ init python:
         def apply_effect(self, game):
             game.paddle_width = 128
             game.paddle = Image("images/paddles/paddle_red_04.png")
-            game.powerup_timer = 10.0
+            game.timer_increase_size = 10.0
