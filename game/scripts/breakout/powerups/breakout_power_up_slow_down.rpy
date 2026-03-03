@@ -1,17 +1,17 @@
 init python:
-    class PowerUpIncreaseSize:
+    class PowerUpSlowDown:
         WIDTH = 32
         HEIGHT = 32
         SPEED = 150
         FPS = 8
         
         SPRITES = [
-            "images/powerups/power_up_increase_size_00.png",
-            "images/powerups/power_up_increase_size_01.png",
-            "images/powerups/power_up_increase_size_02.png",
-            "images/powerups/power_up_increase_size_03.png",
-            "images/powerups/power_up_increase_size_04.png",
-            "images/powerups/power_up_increase_size_05.png"
+            "images/powerups/power_up_slow_down_00.png",
+            "images/powerups/power_up_slow_down_01.png",
+            "images/powerups/power_up_slow_down_02.png",
+            "images/powerups/power_up_slow_down_03.png",
+            "images/powerups/power_up_slow_down_04.png",
+            "images/powerups/power_up_slow_down_05.png"
         ]
 
         def __init__(self, x, y):
@@ -30,6 +30,4 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.paddle_width = 128
-            game.paddle = Image("images/paddles/paddle_red_04.png")
-            game.powerup_timer = 10.0
+            game.timer_slow_down = 10.0

@@ -14,7 +14,10 @@ init python:
 
             self.paddle_default_width = 64
             self.paddle_default_image = Image("images/paddles/paddle_red_02.png")
-            self.powerup_timer = 0
+
+            # timers
+            self.timer_increase_size = 0
+            self.timer_slow_down = 0
 
             # bola
             self.ball = Image("images/balls/ball_white.png")
@@ -65,15 +68,26 @@ init python:
             delta_time = st - self.old_st
             self.old_st = st
 
-            # timer powerup
-            if self.powerup_timer > 0:
-                self.powerup_timer -= delta_time
-                if self.powerup_timer <= 0:
-                    self.powerup_timer = 0
+            # timer powerup increase size
+            if self.timer_increase_size > 0:
+                self.timer_increase_size -= delta_time
+                if self.timer_increase_size <= 0:
+                    self.timer_increase_size = 0
                     self.paddle_width = self.paddle_default_width
                     self.paddle = self.paddle_default_image
 
-            speed = delta_time * self.ball_speed
+            # timer slow down
+            if self.timer_slow_down > 0:
+                self.timer_slow_down -= delta_time
+                if self.timer_slow_down < 0:
+                    self.timer_slow_down = 0
+
+            current_ball_speed = self.ball_speed
+
+            if self.timer_slow_down > 0 and self.ball_direction_y > 0:
+                current_ball_speed = self.ball_speed * 0.5
+            
+            speed = delta_time * current_ball_speed
             old_ball_y = self.ball_y
 
             if self.stuck:

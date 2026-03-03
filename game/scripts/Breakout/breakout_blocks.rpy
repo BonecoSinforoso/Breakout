@@ -62,7 +62,7 @@ init python:
         def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
             score = 0
             hit_occurred = False
-            spawned_powerups = [] # Lista para guardar power-ups gerados neste frame
+            spawned_powerups = []
 
             for block in self.blocks:
                 if not block.active:
@@ -83,7 +83,9 @@ init python:
                     score += points
                     
                     if destroyed and random.random() < block.DROP_CHANCE:
-                        spawned_powerups.append(PowerUpIncreaseSize(block.x + block.WIDTH/2, block.y + block.HEIGHT/2))
+                        powerup_classes = [PowerUpIncreaseSize, PowerUpSlowDown]                        
+                        chosen_powerup = random.choice(powerup_classes)                        
+                        spawned_powerups.append(chosen_powerup(block.x + block.WIDTH/2, block.y + block.HEIGHT/2))
 
                     if not hit_occurred:
                         hit_occurred = True
