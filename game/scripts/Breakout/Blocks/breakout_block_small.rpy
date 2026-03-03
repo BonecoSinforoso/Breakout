@@ -6,6 +6,8 @@ init python:
         HEIGHT = 16
         HP = 1
 
+        DROP_CHANCE = 0.2
+
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",
         ]

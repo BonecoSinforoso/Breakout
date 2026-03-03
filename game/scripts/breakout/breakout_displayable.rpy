@@ -1,24 +1,38 @@
+# TODO: desacoplar excessos
 init python:
 
-    class PongDisplayable(renpy.Displayable):
+    class BreakoutDisplayable(renpy.Displayable):
 
         def __init__(self):
             renpy.Displayable.__init__(self)
 
-            ### State
-            self.paddle = Image("images/paddles/paddle_red_02.png")
-            self.ball = Image("images/balls/ball_white.png")
-
-            self.stuck = True
-            self.score = 0
-            self.lives = 4
             self.player_x = 1920 / 2
 
+            # raquete
+            self.paddle = Image("images/paddles/paddle_red_02.png")
+            self.paddle_width = 64
+
+            self.paddle_default_width = 64
+            self.paddle_default_image = Image("images/paddles/paddle_red_02.png")
+
+            # timers
+            self.timer_increase_size = 0
+            self.timer_slow_down = 0
+
+            # bola
+            self.ball = Image("images/balls/ball_white.png")
             self.ball_x = self.player_x
             self.ball_y = 0
             self.ball_direction_x = 0.5
             self.ball_direction_y = -0.5
             self.ball_speed = BALL_SPEED_DEFAULT
+
+            # outros
+            self.powerups = []
+
+            self.stuck = True
+            self.score = 0
+            self.lives = 4
 
             self.old_st = None
             self.winner = None
@@ -37,6 +51,7 @@ init python:
                 renpy.timeout(0)
             else:
                 # Devolve a bola ao jogador
+                renpy.sound.play("breakou_ball_out.wav", channel=2)
                 self.stuck = True
                 self.ball_speed = BALL_SPEED_DEFAULT
                 self.ball_direction_x = 0.5
@@ -53,7 +68,26 @@ init python:
             delta_time = st - self.old_st
             self.old_st = st
 
-            speed = delta_time * self.ball_speed
+            # timer powerup increase size
+            if self.timer_increase_size > 0:
+                self.timer_increase_size -= delta_time
+                if self.timer_increase_size <= 0:
+                    self.timer_increase_size = 0
+                    self.paddle_width = self.paddle_default_width
+                    self.paddle = self.paddle_default_image
+
+            # timer slow down
+            if self.timer_slow_down > 0:
+                self.timer_slow_down -= delta_time
+                if self.timer_slow_down < 0:
+                    self.timer_slow_down = 0
+
+            current_ball_speed = self.ball_speed
+
+            if self.timer_slow_down > 0 and self.ball_direction_y > 0:
+                current_ball_speed = self.ball_speed * 0.5
+            
+            speed = delta_time * current_ball_speed
             old_ball_y = self.ball_y
 
             if self.stuck:
@@ -88,24 +122,51 @@ init python:
                 if not self.stuck:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
 
-            # Colisão e render dos blocos
-            self.ball_direction_x, self.ball_direction_y, score = self.block_grid.check_collision(
+            # Colisao e render dos blocos
+            self.ball_direction_x, self.ball_direction_y, score, new_powerups = self.block_grid.check_collision(
                 self.ball_x, self.ball_y,
                 BALL_WIDTH, BALL_HEIGHT,
                 self.ball_direction_x, self.ball_direction_y
             )
+
+            self.powerups.extend(new_powerups)
 
             self.score += score
             store.player_score = self.score
 
             self.block_grid.render(r, width, height, st, at)
 
-            # paddle_fn com corpo completo da colisão
+            # Logica dos PowerUps
+            for pu in self.powerups[:]: # Iterando sobre uma copia para remover com segurança
+                pu.update(delta_time)
+                pu.render(r, width, height, st, at)
+                
+                # Verifica colisão simples (AABB) com o paddle
+                pu_left = pu.x - pu.WIDTH / 2
+                pu_right = pu.x + pu.WIDTH / 2
+                pu_bottom = pu.y + pu.HEIGHT / 2
+                
+                paddle_left = self.player_x - self.paddle_width / 2
+                paddle_right = self.player_x + self.paddle_width / 2
+                paddle_top = PADDLE_Y - PADDLE_HEIGHT / 2
+                paddle_bottom = PADDLE_Y + PADDLE_HEIGHT / 2
+                
+                # Se colidiu com o paddle
+                if (pu_right >= paddle_left and pu_left <= paddle_right and 
+                    pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
+                    pu.apply_effect(self)
+                    self.powerups.remove(pu)
+                    renpy.sound.play("breakout_powerup.wav", channel=1)
+                
+                # Se saiu pela parte inferior da tela
+                elif pu.y > 1080:
+                    self.powerups.remove(pu)
+
             def paddle_fn(position_x, position_y, hotside):
                 pi = renpy.render(self.paddle, width, height, st, at)
-                r.blit(pi, (int(position_x - PADDLE_WIDTH / 2), int(position_y - PADDLE_HEIGHT / 2)))
+                r.blit(pi, (int(position_x - self.paddle_width / 2), int(position_y - PADDLE_HEIGHT / 2)))
 
-                if position_x - PADDLE_WIDTH / 2 <= self.ball_x <= position_x + PADDLE_WIDTH / 2:
+                if position_x - self.paddle_width / 2 <= self.ball_x <= position_x + self.paddle_width / 2:
                     hit = False
 
                     if old_ball_y >= hotside >= self.ball_y:
@@ -158,11 +219,11 @@ init python:
             else:
                 raise renpy.IgnoreEvent()
 
-label play_pong:
+label play_breakout:
     window hide
     $ quick_menu = False
 
-    call screen pong
+    call screen breakout
 
     $ quick_menu = True
     window show
@@ -181,8 +242,8 @@ label play_pong:
     menu:
         "Play again?"
         "Yes.":
-            jump play_pong
+            jump play_breakout
         "No.":
-            jump after_pong
+            jump after_breakout
 
     return

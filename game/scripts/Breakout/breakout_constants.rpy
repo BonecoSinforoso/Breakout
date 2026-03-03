@@ -1,6 +1,5 @@
 init python:
 
-    PADDLE_WIDTH = 64
     PADDLE_HEIGHT = 32
     PADDLE_Y = 900
 

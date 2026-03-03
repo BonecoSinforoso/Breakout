@@ -1,8 +1,10 @@
-# breakout_blocks.rpy
+# TODO mudar nome para BlocksManager
 # Gerencia o grid de blocos. Os tipos de bloco ficam em seus proprios arquivos.
 init python:
 
-    class BreakoutBlocks:
+    import random
+
+    class BreakoutBlocks:        
 
         BLOCK_COLS = 8
         BLOCK_ROWS = 4
@@ -14,8 +16,8 @@ init python:
         ROW_BLOCK_TYPES = {
             0: (BlockSmall, "blue"),
             1: (BlockSmall, "brown"),
-            2: (BlockBrick, "gray"),
-            3: (BlockBrick, "red"),
+            2: (BlockSmall, "gray"),
+            3: (BlockSmall, "red"),
         }
 
         def __init__(self, court_left, court_top):
@@ -50,16 +52,18 @@ init python:
             return all(not b.active for b in self.blocks)
 
         def get_all_frames(self):
-            """Usado pelo visit() em PongDisplayable."""
             result = []
+
             for b in self.blocks:
                 for frames in b._frames.values():
                     result.extend(frames)
+
             return result
 
         def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
             score = 0
             hit_occurred = False
+            spawned_powerups = []
 
             for block in self.blocks:
                 if not block.active:
@@ -78,6 +82,12 @@ init python:
                     destroyed, points = block.hit()
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
                     score += points
+                    
+                    if destroyed and random.random() < block.DROP_CHANCE:
+                        new_pu = PowerUps.get_random_drop(block.x + block.WIDTH/2, block.y + block.HEIGHT/2)
+                        
+                        if new_pu is not None:
+                            spawned_powerups.append(new_pu)
 
                     if not hit_occurred:
                         hit_occurred = True
@@ -89,7 +99,9 @@ init python:
                         else:
                             ball_dy = -ball_dy
 
-            return ball_dx, ball_dy, score
+                    break
+
+            return ball_dx, ball_dy, score, spawned_powerups
 
 
         def render(self, r, width, height, st, at):

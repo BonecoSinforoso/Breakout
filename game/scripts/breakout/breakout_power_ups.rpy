@@ -1,0 +1,38 @@
+# TODO mudar nome para PowerUpsManager
+# exemplos para desativar power up em qualquer momento
+# $ PowerUps.set_active("increase_size", False)
+# $ PowerUps.set_active("slow_down", True)
+init 1 python:
+    
+    import random
+
+    class PowerUps:
+
+        CATALOG = {
+            "increase_size": {
+                "class": PowerUpIncreaseSize, 
+                "active": True
+            },
+            "slow_down": {
+                "class": PowerUpSlowDown, 
+                "active": True
+            }
+        }
+
+        @classmethod
+        def get_random_drop(cls, x, y):
+            
+            ativos = [dados["class"] for chave, dados in cls.CATALOG.items() if dados["active"]]
+            
+            if not ativos:
+                return None
+            
+            powerup_escolhido = random.choice(ativos)
+            
+            return powerup_escolhido(x, y)
+            
+        @classmethod
+        def set_active(cls, powerup_name, is_active):
+            
+            if powerup_name in cls.CATALOG:
+                cls.CATALOG[powerup_name]["active"] = is_active
