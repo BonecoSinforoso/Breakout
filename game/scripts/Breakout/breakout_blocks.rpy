@@ -1,7 +1,9 @@
 # Gerencia o grid de blocos. Os tipos de bloco ficam em seus proprios arquivos.
 init python:
 
-    class BreakoutBlocks:
+    import random
+
+    class BreakoutBlocks:        
 
         BLOCK_COLS = 8
         BLOCK_ROWS = 4
@@ -80,7 +82,7 @@ init python:
                     renpy.sound.play("breakout_ball_collision.wav", channel=0)
                     score += points
                     
-                    if destroyed and renpy.random.random() < block.DROP_CHANCE:
+                    if destroyed and random.random() < block.DROP_CHANCE:
                         spawned_powerups.append(PowerUpIncreaseSize(block.x + block.WIDTH/2, block.y + block.HEIGHT/2))
 
                     if not hit_occurred:
@@ -92,6 +94,8 @@ init python:
                             ball_dx = -ball_dx
                         else:
                             ball_dy = -ball_dy
+
+                    break
 
             return ball_dx, ball_dy, score, spawned_powerups
 
