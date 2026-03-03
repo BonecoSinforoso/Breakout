@@ -1,6 +1,8 @@
 # TODO: desacoplar excessos
 init python:
 
+    import math
+
     class BreakoutDisplayable(renpy.Displayable):
 
         def __init__(self):
@@ -171,15 +173,28 @@ init python:
 
                     if old_ball_y >= hotside >= self.ball_y:
                         self.ball_y = hotside - (self.ball_y - hotside)
-                        self.ball_direction_y = -self.ball_direction_y
                         hit = True
                     elif old_ball_y <= hotside <= self.ball_y:
                         self.ball_y = hotside - (self.ball_y - hotside)
-                        self.ball_direction_y = -self.ball_direction_y
                         hit = True
                     
                     if hit:
                         renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                        
+                        dist_from_center = self.ball_x - position_x
+                        half_width = self.paddle_width / 2
+                        
+                        normalized_dist = dist_from_center / half_width
+                        normalized_dist = max(-1.0, min(1.0, normalized_dist))
+                        
+                        max_angle = 1.047 
+                        bounce_angle = normalized_dist * max_angle
+                        
+                        new_dx = math.sin(bounce_angle)
+                        new_dy = -math.cos(bounce_angle)
+                        
+                        self.ball_direction_x = new_dx * 0.707
+                        self.ball_direction_y = new_dy * 0.707
 
             paddle_fn(self.player_x, PADDLE_Y, PADDLE_Y - PADDLE_HEIGHT / 2)
 
