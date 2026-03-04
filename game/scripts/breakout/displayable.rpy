@@ -54,7 +54,7 @@ init python:
                 self.winner = "eileen"
                 renpy.timeout(0)
             else:
-                renpy.sound.play("breakout_ball_out.wav", channel=2)
+                renpy.sound.play("ball_out.wav", channel=2)
                 self.balls = [
                     Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
                 ]
@@ -115,21 +115,21 @@ init python:
                     ball.y = ball_top + (ball_top - ball.y)
                     ball.dy = -ball.dy
                     if not ball.stuck:
-                        renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                        renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisão Parede Esquerda
                 if ball.x < ball_left:
                     ball.x = ball_left + (ball_left - ball.x)
                     ball.dx = -ball.dx
                     if not ball.stuck:
-                        renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                        renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisão Parede Direita
                 if ball.x > ball_right:
                     ball.x = ball_right - (ball.x - ball_right)
                     ball.dx = -ball.dx
                     if not ball.stuck:
-                        renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                        renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisão com os Blocos
                 ball.dx, ball.dy, score, new_powerups = self.block_grid.check_collision(
@@ -154,7 +154,7 @@ init python:
                         hit = True
 
                     if hit:
-                        renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                        renpy.sound.play("ball_collision.wav", channel=0)
                         
                         dist_from_center = ball.x - self.player_x
                         normalized_dist = max(-1.0, min(1.0, dist_from_center / (self.paddle_width / 2)))
@@ -194,7 +194,7 @@ init python:
                     pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
                     pu.apply_effect(self)
                     self.powerups.remove(pu)
-                    renpy.sound.play("breakout_powerup.wav", channel=1)
+                    renpy.sound.play("power_up_collected.wav", channel=1)
                 elif pu.y > 1080:
                     self.powerups.remove(pu)
             # --------------------------

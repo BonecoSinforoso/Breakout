@@ -80,7 +80,7 @@ init python:
 
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
                     destroyed, points = block.hit()
-                    renpy.sound.play("breakout_ball_collision.wav", channel=0)
+                    renpy.sound.play("ball_collision.wav", channel=0)
                     score += points
                     
                     if destroyed and random.random() < block.DROP_CHANCE:
