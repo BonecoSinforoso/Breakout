@@ -10,10 +10,14 @@ init 1 python:
         CATALOG = {
             "increase_size": {
                 "class": PowerUpIncreaseSize, 
-                "active": True
+                "active": False
             },
             "slow_down": {
                 "class": PowerUpSlowDown, 
+                "active": False
+            },
+            "extra_ball": {
+                "class": PowerUpExtraBall,
                 "active": True
             }
         }

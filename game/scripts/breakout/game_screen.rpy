@@ -3,6 +3,7 @@
 # a instância do BreakoutDisplayable — alem de elementos de
 # sobreposicao como mensagens e HUD futuro
 screen game():
+    
     default breakout = BreakoutDisplayable()
 
     add "#090070"

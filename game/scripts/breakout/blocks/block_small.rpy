@@ -2,11 +2,12 @@
 init python:
 
     class BlockSmall(BlockBase):
+        
         WIDTH = 32
         HEIGHT = 16
         HP = 1
 
-        DROP_CHANCE = 0.2
+        DROP_CHANCE = 0.9
 
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",

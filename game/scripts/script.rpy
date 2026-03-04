@@ -20,9 +20,9 @@ label ask_name:
     if player_name == "":
         jump ask_name
     else:
-        jump play_breakout
+        jump play_game
     
-label after_breakout:
+label after_game:
 
     eileen "That was fun! I hope you enjoyed it."
 
