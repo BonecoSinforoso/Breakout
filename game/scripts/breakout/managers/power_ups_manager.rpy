@@ -1,12 +1,11 @@
-# TODO mudar nome para PowerUpsManager
 # exemplos para desativar power up em qualquer momento
-# $ PowerUps.set_active("increase_size", False)
-# $ PowerUps.set_active("slow_down", True)
+# $ PowerUpsManager.set_active("increase_size", False)
+# $ PowerUpsManager.set_active("slow_down", True)
 init 1 python:
     
     import random
 
-    class PowerUps:
+    class PowerUpsManager:
 
         CATALOG = {
             "increase_size": {
