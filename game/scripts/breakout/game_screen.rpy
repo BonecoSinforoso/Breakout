@@ -2,7 +2,7 @@
 # Responsavel por montar a cena do jogo: fundo, quadra e
 # a instância do BreakoutDisplayable — alem de elementos de
 # sobreposicao como mensagens e HUD futuro
-screen breakout():
+screen game():
     default breakout = BreakoutDisplayable()
 
     add "#090070"
