@@ -39,7 +39,7 @@ init python:
             self.old_st = None
             self.winner = None
 
-            self.block_grid = BreakoutBlocks(COURT_LEFT, COURT_TOP)
+            self.block_grid = BlocksManager(COURT_LEFT, COURT_TOP)
 
         def visit(self):
             block_frames = self.block_grid.get_all_frames()
@@ -139,11 +139,10 @@ init python:
             self.block_grid.render(r, width, height, st, at)
 
             # Logica dos PowerUps
-            for pu in self.powerups[:]: # Iterando sobre uma copia para remover com segurança
+            for pu in self.powerups[:]:
                 pu.update(delta_time)
                 pu.render(r, width, height, st, at)
-                
-                # Verifica colisão simples (AABB) com o paddle
+                                
                 pu_left = pu.x - pu.WIDTH / 2
                 pu_right = pu.x + pu.WIDTH / 2
                 pu_bottom = pu.y + pu.HEIGHT / 2
@@ -238,7 +237,7 @@ label play_breakout:
     window hide
     $ quick_menu = False
 
-    call screen breakout
+    call screen game
 
     $ quick_menu = True
     window show
