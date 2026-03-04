@@ -1,7 +1,7 @@
-# breakout_block_brick.rpy
 init python:
 
     class BlockBrick(BlockBase):
+        
         WIDTH = 64
         HEIGHT = 32
         HP = 5  # um frame por ponto de vida

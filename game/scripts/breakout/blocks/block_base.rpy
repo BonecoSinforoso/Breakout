@@ -2,6 +2,7 @@
 init python:
 
     class BlockBase:
+        
         WIDTH = 32
         HEIGHT = 16
         HP = 1

@@ -1,4 +1,5 @@
 screen breakout_leaderboard():
+    
     tag menu
 
     use game_menu(_("Leaderboard"), scroll=None):
