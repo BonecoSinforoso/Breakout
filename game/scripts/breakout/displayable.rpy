@@ -48,6 +48,8 @@ init python:
         def _lose_life(self):
             self.lives -= 1
 
+            self.powerups.clear()
+
             if self.lives <= 0:
                 self.winner = "eileen"
                 renpy.timeout(0)
