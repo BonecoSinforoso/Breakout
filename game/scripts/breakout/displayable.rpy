@@ -58,7 +58,9 @@ init python:
                 self.winner = "eileen"
                 renpy.timeout(0)
             else:
+                self.stuck = True
                 renpy.sound.play("ball_out.wav", channel=2)
+
                 self.balls = [
                     Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
                 ]
@@ -245,7 +247,8 @@ init python:
             import pygame
 
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
-                # Faz um loop e solta todas as bolas que estiverem presas na raquete
+                self.stuck = False
+                
                 for ball in self.balls:
                     ball.stuck = False
 
