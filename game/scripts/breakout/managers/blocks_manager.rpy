@@ -1,4 +1,3 @@
-# TODO mudar nome para BlocksManager
 # Gerencia o grid de blocos. Os tipos de bloco ficam em seus proprios arquivos.
 init python:
 
@@ -6,7 +5,7 @@ init python:
 
     class BlocksManager:
 
-        BLOCK_COLS = 8
+        BLOCK_COLS = 10
         BLOCK_ROWS = 4
         BLOCK_PADDING = 2
         BLOCK_OFFSET_Y = 2
@@ -15,9 +14,9 @@ init python:
         # Altere aqui para mudar quais tipos aparecem em cada linha
         ROW_BLOCK_TYPES = {
             0: (BlockSmall, "blue"),
-            1: (BlockSmall, "brown"),
-            2: (BlockSmall, "gray"),
-            3: (BlockSmall, "red"),
+            1: (BlockDouble, "brown"),
+            2: (BlockTriple, "gray"),
+            3: (BlockBig, "red"),
         }
 
         def __init__(self, court_left, court_top):

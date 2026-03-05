@@ -1,14 +1,14 @@
 init python:
 
-    class BlockSmall(BlockBase):
+    class BlockBig(BlockBase):
         
         WIDTH = 32
-        HEIGHT = 16
+        HEIGHT = 32
         HP = 1
 
-        POINTS_HIT = 5
-        POINTS_DESTROY = 10
-        DROP_CHANCE = 0.5
+        POINTS_HIT = 10
+        POINTS_DESTROY = 20
+        DROP_CHANCE = 0.2
 
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",
@@ -16,8 +16,7 @@ init python:
 
         BLOCK_SPRITES = {
             color: [
-                "images/blocks/small/block_small_{}_{:02d}.png".format(color, i)
-                for i in range(6)
+                "images/blocks/big/block_big_{}.png".format(color)
             ]
             
             for color in COLORS

@@ -1,10 +1,10 @@
 init python:
 
-    class BlockBrick(BlockBase):
+    class BlockTriple(BlockBase):
         
-        WIDTH = 64
-        HEIGHT = 32
-        HP = 5
+        WIDTH = 32
+        HEIGHT = 16
+        HP = 3
 
         POINTS_HIT = 5
         POINTS_DESTROY = 50
@@ -16,8 +16,8 @@ init python:
 
         BLOCK_SPRITES = {
             color: [
-                "images/blocks/brick/block_brick_{}_{:02d}.png".format(color, i)
-                for i in range(5)
+                "images/blocks/triple/block_triple_{}_{:02d}.png".format(color, i)
+                for i in range(3)
             ]
 
             for color in COLORS
