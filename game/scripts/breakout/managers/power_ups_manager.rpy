@@ -18,6 +18,14 @@ init 1 python:
             },
             "extra_ball": {
                 "class": PowerUpExtraBall,
+                "active": False
+            },
+            "fire_ball": {
+                "class": PowerUpFireball,
+                "active": False
+            },
+            "giant_ball": {
+                "class": PowerUpGiantBall,
                 "active": True
             }
         }

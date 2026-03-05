@@ -60,10 +60,10 @@ init python:
 
             return result
 
-        def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy):
+        def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy, is_fireball=False):
             score = 0
             hit_occurred = False
-            spawned_powerups = []
+            spawned_powerups = [] 
 
             for block in self.blocks:
                 if not block.active:
@@ -79,27 +79,35 @@ init python:
                 dist_y = ball_y - closest_y
 
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
-                    destroyed, points = block.hit()
-                    renpy.sound.play("ball_collision.wav", channel=0)
-                    score += points
                     
+                    damage = 100 if is_fireball else 1
+                    
+                    while damage > 0 and block.active:
+                        destroyed, points = block.hit()
+                        score += points
+                        damage -= 1
+                        
+                    renpy.sound.play("ball_collision.wav", channel=0)
+
                     if destroyed and random.random() < block.DROP_CHANCE:
                         new_pu = PowerUpsManager.get_random_drop(block.x + block.WIDTH/2, block.y + block.HEIGHT/2)
-                        
                         if new_pu is not None:
                             spawned_powerups.append(new_pu)
 
                     if not hit_occurred:
                         hit_occurred = True
-                        overlap_x = (ball_w / 2) - abs(dist_x)
-                        overlap_y = (ball_h / 2) - abs(dist_y)
+                        
+                        if not is_fireball:
+                            overlap_x = (ball_w / 2) - abs(dist_x)
+                            overlap_y = (ball_h / 2) - abs(dist_y)
 
-                        if overlap_x < overlap_y:
-                            ball_dx = -ball_dx
-                        else:
-                            ball_dy = -ball_dy
+                            if overlap_x < overlap_y:
+                                ball_dx = -ball_dx
+                            else:
+                                ball_dy = -ball_dy
 
-                    break
+                    if not is_fireball:
+                        break 
 
             return ball_dx, ball_dy, score, spawned_powerups
 
