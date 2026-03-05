@@ -20,9 +20,13 @@ init python:
             # timers
             self.timer_increase_size = 0
             self.timer_slow_down = 0
+            self.timer_fire_ball = 0
+            self.timer_giant_ball = 0
 
             # bola
-            self.ball_image = Image("images/balls/ball_white.png")
+            self.ball_default_image = Image("images/balls/ball_white.png")
+            self.ball_fire_image = Image("images/balls/ball_fire.png")
+            self.ball_giant_image = Image("images/balls/ball_giant.png")
             
             # Começa o jogo com uma bola travada na raquete
             self.balls = [
@@ -43,7 +47,7 @@ init python:
 
         def visit(self):
             block_frames = self.block_grid.get_all_frames()
-            return [self.paddle, self.ball_image] + block_frames
+            return [self.paddle, self.ball_default_image] + block_frames
 
         def _lose_life(self):
             self.lives -= 1
@@ -82,6 +86,16 @@ init python:
                 if self.timer_slow_down < 0:
                     self.timer_slow_down = 0
 
+            if self.timer_fire_ball > 0:
+                self.timer_fire_ball -= delta_time
+                if self.timer_fire_ball < 0:
+                    self.timer_fire_ball = 0
+
+            if self.timer_giant_ball > 0:
+                self.timer_giant_ball -= delta_time
+                if self.timer_giant_ball < 0:
+                    self.timer_giant_ball = 0
+
             # Renderiza a raquete uma única vez
             pi = renpy.render(self.paddle, width, height, st, at)
             r.blit(pi, (int(self.player_x - self.paddle_width / 2), int(PADDLE_Y - PADDLE_HEIGHT / 2)))
@@ -92,12 +106,26 @@ init python:
             ball_right = COURT_RIGHT - BALL_WIDTH / 2
 
             # Loop por cada bola ativa na tela
-            for ball in self.balls[:]: # Itera sobre uma cópia para poder remover com segurança
+            for ball in self.balls[:]: 
                 
-                # --- Cálculo de Velocidade da Bola Específica ---
+                # Propriedades da Bola
                 current_ball_speed = ball.speed
+                b_image = self.ball_default_image
+                b_w = BALL_WIDTH
+                b_h = BALL_HEIGHT
+                is_fireball = (self.timer_fire_ball > 0)
+
                 if self.timer_slow_down > 0 and ball.dy > 0:
-                    current_ball_speed = ball.speed * 0.5
+                    current_ball_speed *= 0.5
+                
+                if self.timer_giant_ball > 0:
+                    current_ball_speed *= 1.5 # 50% mais rápida!
+                    b_image = self.ball_giant_image
+                    b_w = 32
+                    b_h = 32
+                elif is_fireball:
+                    b_image = self.ball_fire_image
+                # --------------------------------------
                 
                 speed = delta_time * current_ball_speed
                 old_ball_y = ball.y
@@ -109,6 +137,11 @@ init python:
                 else:
                     ball.x += ball.dx * speed
                     ball.y += ball.dy * speed
+
+                # ATENÇÃO AQUI: As paredes agora usam b_w e b_h
+                ball_top = COURT_TOP + b_h / 2
+                ball_left = COURT_LEFT + b_w / 2
+                ball_right = COURT_RIGHT - b_w / 2
 
                 # Colisão com o Teto
                 if ball.y < ball_top:
@@ -131,10 +164,9 @@ init python:
                     if not ball.stuck:
                         renpy.sound.play("ball_collision.wav", channel=0)
 
-                # Colisão com os Blocos
-                ball.dx, ball.dy, score, new_powerups = self.block_grid.check_collision(
-                    ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT, ball.dx, ball.dy
-                )
+                # Colisão com os Blocos (Agora passamos as dimensões atuais e o status de Fogo)
+                ball.dx, ball.dy, score, new_powerups = self.block_grid.check_collision(ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball)
+
                 self.score += score
                 store.player_score = self.score
                 self.powerups.extend(new_powerups)
@@ -165,8 +197,8 @@ init python:
                 # ---------------------------------------------------
 
                 # Renderiza a bola
-                ball_img = renpy.render(self.ball_image, width, height, st, at)
-                r.blit(ball_img, (int(ball.x - BALL_WIDTH / 2), int(ball.y - BALL_HEIGHT / 2)))
+                ball_img = renpy.render(b_image, width, height, st, at)
+                r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
 
                 # Verifica Morte desta bola específica
                 if ball.y > 1080:
@@ -175,8 +207,7 @@ init python:
             # Render dos Blocos
             self.block_grid.render(r, width, height, st, at)
 
-            # --- Lógica dos PowerUps ---
-            # (Seu código do loop de power-ups para remover e checar AABB com a raquete continua exatamente o mesmo aqui)
+            # --- Logica dos PowerUps ---
             for pu in self.powerups[:]:
                 pu.update(delta_time)
                 pu.render(r, width, height, st, at)
@@ -244,8 +275,8 @@ label play_game:
     window show
 
     $ highscores = persistent.highscores + [(player_name, player_score)]
-    $ highscores.sort(key=lambda x: x[1], reverse=True)  # ordena por score decrescente
-    $ persistent.highscores = highscores[:10]  # top 10
+    $ highscores.sort(key=lambda x: x[1], reverse=True)
+    $ persistent.highscores = highscores[:10]
 
     if _return == "eileen":
         "You lose!"
