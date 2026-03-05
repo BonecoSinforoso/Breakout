@@ -4,7 +4,7 @@ init python:
         
         WIDTH = 64
         HEIGHT = 32
-        HP = 5  # um frame por ponto de vida
+        HP = 5
 
         POINTS_HIT = 5
         POINTS_DESTROY = 50

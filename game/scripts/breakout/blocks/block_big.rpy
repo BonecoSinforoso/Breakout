@@ -6,6 +6,8 @@ init python:
         HEIGHT = 32
         HP = 1
 
+        POINTS_HIT = 10
+        POINTS_DESTROY = 20
         DROP_CHANCE = 0.2
 
         COLORS = [

@@ -6,7 +6,9 @@ init python:
         HEIGHT = 16
         HP = 1
 
-        DROP_CHANCE = 0.9
+        POINTS_HIT = 5
+        POINTS_DESTROY = 10
+        DROP_CHANCE = 0.5
 
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",

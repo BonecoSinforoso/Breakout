@@ -1,4 +1,3 @@
-# breakout_block_base.rpy
 init python:
 
     class BlockBase:
@@ -7,8 +6,8 @@ init python:
         HEIGHT = 16
         HP = 1
         
-        POINTS_HIT     = 0
-        POINTS_DESTROY = 10
+        POINTS_HIT = 1
+        POINTS_DESTROY = 5
         DROP_CHANCE = 0.1
 
         BLOCK_FPS      = 8
