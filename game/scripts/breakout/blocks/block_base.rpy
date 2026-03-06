@@ -10,9 +10,8 @@ init python:
         POINTS_DESTROY = 5
         DROP_CHANCE = 0.1
 
-        BLOCK_FPS      = 8
-        ANIM_DURATION  = 1.0
-        ANIM_DELAY     = 3.0
+        BLOCK_FPS = 8
+        ANIM_DELAY = 3.0
 
         BLOCK_SPRITES = {}
 
@@ -40,13 +39,20 @@ init python:
             return self._frames[self.color]
 
         def render(self, r, width, height, st, at):
-            cycle = self.ANIM_DURATION + self.ANIM_DELAY
+            frames = self.get_frames()
+            num_frames = len(frames)
+            
+            anim_duration = num_frames / float(self.BLOCK_FPS)
+            
+            cycle = anim_duration + self.ANIM_DELAY
             t = st % cycle
-            if t < self.ANIM_DURATION:
-                frame_index = int(t * self.BLOCK_FPS) % len(self.get_frames())
+            
+            if t < anim_duration:
+                frame_index = int(t * self.BLOCK_FPS)
+                frame_index = min(frame_index, num_frames - 1)
             else:
-                frame_index = 0
+                frame_index = num_frames - 1
 
-            surf    = self.get_frames()[frame_index]
+            surf = frames[frame_index]
             rendered = renpy.render(surf, self.WIDTH, self.HEIGHT, st, at)
             r.blit(rendered, (int(self.x), int(self.y)))
