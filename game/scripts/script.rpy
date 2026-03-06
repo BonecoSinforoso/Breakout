@@ -2,7 +2,8 @@
 define eileen = Character("Eileen")
 default player_name = ""
 default player_score = 0
-default persistent.highscores = []
+default bonus_lives = 0
+default bonus_time = 0
 
 label start:
 
@@ -14,6 +15,7 @@ label start:
     return
 
 label ask_name:
+
     $ player_name = renpy.input("What is your name?", length = 20)
     $ player_name = player_name.strip()
         

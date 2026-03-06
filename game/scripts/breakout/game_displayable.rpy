@@ -259,8 +259,14 @@ init python:
             elif self.block_grid.all_destroyed() and not self.winner:
                 self.winner = "player"
 
-                store.player_score += 100 * self.lives
-                store.player_score += max(0, 300 - int(self.time_elapsed))
+                bonus_lives = 100 * self.lives
+                bonus_time = max(0, 300 - int(self.time_elapsed))
+
+                store.bonus_lives = bonus_lives
+                store.bonus_time = bonus_time
+
+                store.player_score += bonus_lives
+                store.player_score += bonus_time
 
                 renpy.timeout(0)
 
@@ -315,8 +321,9 @@ label play_game:
         "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations."
-        
-        "[player_name] you scored [player_score] points"
+        "Time Bonus: [bonus_time] points!"
+        "Lives Bonus: [bonus_lives] points!"
+        "[player_name] you scored a total of [player_score] points!"
 
     menu:
         "Play again?"
