@@ -1,4 +1,4 @@
-# TODO: desacoplar excessos
+# TODO: desacoplar excessos (timers)
 init python:
 
     import math
@@ -53,6 +53,7 @@ init python:
             self.lives -= 1
 
             self.powerups.clear()
+            self.reset_powerup_effects()
 
             if self.lives <= 0:
                 self.winner = "eileen"
@@ -64,6 +65,15 @@ init python:
                 self.balls = [
                     Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
                 ]
+
+        def reset_powerup_effects(self):
+            self.timer_increase_size = 0
+            self.timer_slow_down = 0
+            self.timer_fire_ball = 0
+            self.timer_giant_ball = 0
+            
+            self.paddle_width = self.paddle_default_width
+            self.paddle = self.paddle_default_image
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -121,7 +131,7 @@ init python:
                     current_ball_speed *= 0.5
                 
                 if self.timer_giant_ball > 0:
-                    current_ball_speed *= 1.5 # 50% mais rápida!
+                    current_ball_speed *= 1.5
                     b_image = self.ball_giant_image
                     b_w = 32
                     b_h = 32
@@ -140,7 +150,7 @@ init python:
                     ball.x += ball.dx * speed
                     ball.y += ball.dy * speed
 
-                # ATENÇÃO AQUI: As paredes agora usam b_w e b_h
+                # paredes usam b_w e b_h
                 ball_top = COURT_TOP + b_h / 2
                 ball_left = COURT_LEFT + b_w / 2
                 ball_right = COURT_RIGHT - b_w / 2
