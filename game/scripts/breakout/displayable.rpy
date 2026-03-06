@@ -1,4 +1,5 @@
 # TODO: desacoplar excessos (timers)
+# TODO: mudar nome para game_displayable
 init python:
 
     import math
@@ -40,10 +41,18 @@ init python:
             self.score = 0
             self.lives = 4
 
+            self.time_elapsed = 0
+
             self.old_st = None
             self.winner = None
 
             self.block_grid = BlocksManager(COURT_LEFT, COURT_TOP)
+        
+        @property
+        def formatted_time(self):
+            minutes = int(self.time_elapsed) // 60
+            seconds = int(self.time_elapsed) % 60
+            return "{:02d}:{:02d}".format(minutes, seconds)
 
         def visit(self):
             block_frames = self.block_grid.get_all_frames()
@@ -84,7 +93,10 @@ init python:
             delta_time = st - self.old_st
             self.old_st = st
 
-            # timer powerup increase size
+            if not self.stuck and not self.winner:
+                self.time_elapsed += delta_time
+
+            # timers
             if self.timer_increase_size > 0:
                 self.timer_increase_size -= delta_time
                 if self.timer_increase_size <= 0:
@@ -92,7 +104,6 @@ init python:
                     self.paddle_width = self.paddle_default_width
                     self.paddle = self.paddle_default_image
 
-            # timer slow down
             if self.timer_slow_down > 0:
                 self.timer_slow_down -= delta_time
                 if self.timer_slow_down < 0:
