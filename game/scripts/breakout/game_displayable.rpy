@@ -256,8 +256,18 @@ init python:
             if len(self.balls) == 0 and not self.winner:
                 self._lose_life()
                 renpy.timeout(0)
-            elif self.block_grid.all_destroyed():
+            elif self.block_grid.all_destroyed() and not self.winner:
                 self.winner = "player"
+
+                bonus_lives = 100 * self.lives
+                bonus_time = max(0, 300 - int(self.time_elapsed))
+
+                store.bonus_lives = bonus_lives
+                store.bonus_time = bonus_time
+
+                store.player_score += bonus_lives
+                store.player_score += bonus_time
+
                 renpy.timeout(0)
 
             renpy.redraw(self, 0)
@@ -276,6 +286,15 @@ init python:
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_q:
                 self.winner = "eileen"
                 renpy.timeout(0)
+
+            # Tecla w: destroi todos os blocos
+            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_w:
+                for block in self.block_grid.blocks:
+                    while block.active:
+                        destroyed, points = block.hit()
+                        self.score += points
+                                
+                store.player_score = self.score
 
             renpy.restart_interaction()
 
@@ -306,7 +325,10 @@ label play_game:
         "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations."
-        "[player_name] you scored [player_score] points"
+        "Block: [player_score - bonus_time - bonus_lives] points!"
+        "Time Bonus: [bonus_time] points!"
+        "Lives Bonus: [bonus_lives] points!"
+        "[player_name] you scored a total of [player_score] points!"
 
     menu:
         "Play again?"
