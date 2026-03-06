@@ -290,7 +290,11 @@ init python:
             # Tecla w: destroi todos os blocos
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_w:
                 for block in self.block_grid.blocks:
-                    block.hp = 0
+                    while block.active:
+                        destroyed, points = block.hit()
+                        self.score += points
+                                
+                store.player_score = self.score
 
             renpy.restart_interaction()
 
@@ -321,6 +325,7 @@ label play_game:
         "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations."
+        "Block: [player_score - bonus_time - bonus_lives] points!"
         "Time Bonus: [bonus_time] points!"
         "Lives Bonus: [bonus_lives] points!"
         "[player_name] you scored a total of [player_score] points!"
