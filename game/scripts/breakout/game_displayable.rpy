@@ -252,11 +252,13 @@ init python:
                     self.powerups.remove(pu)
             # --------------------------
 
-            # vitoria/derrota
+            # derrota/vitoria
             if len(self.balls) == 0 and not self.winner:
+                renpy.sound.play("result_lose.mp3", channel=0)
                 self._lose_life()
                 renpy.timeout(0)
             elif self.block_grid.all_destroyed() and not self.winner:
+                renpy.sound.play("result_win.mp3", channel=0)
                 self.winner = "player"
 
                 bonus_lives = 100 * self.lives
@@ -284,8 +286,8 @@ init python:
 
             # Tecla Q: desiste e vai pro You Lose
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_q:
-                self.winner = "eileen"
-                renpy.timeout(0)
+                self.lives = 0
+                self.balls.clear()
 
             # Tecla w: destroi todos os blocos
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_w:
