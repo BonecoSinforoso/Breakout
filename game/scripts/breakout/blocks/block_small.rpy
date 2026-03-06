@@ -10,6 +10,8 @@ init python:
         POINTS_DESTROY = 10
         DROP_CHANCE = 0.5
 
+        ANIM_DELAY = 0.0
+
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",
         ]
