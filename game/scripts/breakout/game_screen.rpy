@@ -30,3 +30,8 @@ screen game():
     text "Score: [breakout.score]":
         xalign 0.5
         yalign 0.9
+
+    text "[breakout.formatted_time]":
+        xalign 0.5
+        yalign 0.95
+    
