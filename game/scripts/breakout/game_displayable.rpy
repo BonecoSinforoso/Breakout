@@ -1,10 +1,9 @@
 # TODO: desacoplar excessos (timers)
-# TODO: mudar nome para game_displayable
 init python:
 
     import math
 
-    class BreakoutDisplayable(renpy.Displayable):
+    class GameDisplayable(renpy.Displayable):
 
         def __init__(self):
             renpy.Displayable.__init__(self)
@@ -293,7 +292,7 @@ label play_game:
     window hide
     $ quick_menu = False
 
-    call screen game
+    call screen game_screen
 
     $ quick_menu = True
     window show
