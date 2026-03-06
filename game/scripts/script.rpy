@@ -26,6 +26,6 @@ label ask_name:
     
 label after_game:
 
-    eileen "That was fun! I hope you enjoyed it."
+    eileen "Thanks for playing! I hope you had fun!"
 
     return
