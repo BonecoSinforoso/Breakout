@@ -30,6 +30,17 @@ init python:
             self.width = self.default_width
             self.image = self.default_image
 
+        def upgrade_size(self, duration=10.0):
+            if self.width == self.default_width:
+                self.width = 80
+                self.image = Image("images/paddles/paddle_red_03.png")
+            
+            elif self.width == 80:
+                self.width = 96
+                self.image = Image("images/paddles/paddle_red_04.png")
+            
+            self.timer_increase_size = duration
+
         def render(self, r, width, height, st, at):
             pi = renpy.render(self.image, width, height, st, at)
             r.blit(pi, (int(self.x - self.width / 2), int(self.y - self.height / 2)))
