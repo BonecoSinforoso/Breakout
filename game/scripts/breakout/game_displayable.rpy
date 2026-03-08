@@ -1,5 +1,3 @@
-# TODO: desacoplar excessos (timers)
-# TODO: refactor render
 # TODO: melhorar sistema de projetil
 init python:
 
@@ -11,11 +9,6 @@ init python:
             renpy.Displayable.__init__(self)
 
             self.paddle = Paddle(1920 / 2)
-            
-            # timers
-            self.timer_slow_down = 0
-            self.timer_fire_ball = 0
-            self.timer_giant_ball = 0
 
             # bola
             self.balls_manager = BallsManager()
@@ -80,22 +73,6 @@ init python:
                 self.time_elapsed += delta_time
 
             self.paddle.update(delta_time)
-
-            # timers
-            if self.timer_slow_down > 0:
-                self.timer_slow_down -= delta_time
-                if self.timer_slow_down < 0:
-                    self.timer_slow_down = 0
-
-            if self.timer_fire_ball > 0:
-                self.timer_fire_ball -= delta_time
-                if self.timer_fire_ball < 0:
-                    self.timer_fire_ball = 0
-
-            if self.timer_giant_ball > 0:
-                self.timer_giant_ball -= delta_time
-                if self.timer_giant_ball < 0:
-                    self.timer_giant_ball = 0
 
             # arsenal
             self.arsenal.update(delta_time)

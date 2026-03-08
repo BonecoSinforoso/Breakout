@@ -1,6 +1,4 @@
-# exemplos para desativar power up em qualquer momento
-# $ PowerUpsManager.set_active("increase_size", False)
-# $ PowerUpsManager.set_active("slow_down", True)
+# gerente dos power ups
 init 1 python:
     
     import random
@@ -22,19 +20,19 @@ init 1 python:
             },
             "fire_ball": {
                 "class": PowerUpFireball,
-                "active": False
+                "active": True
             },
             "giant_ball": {
                 "class": PowerUpGiantBall,
-                "active": False
+                "active": True
             },
             "basic_projectile": {
                 "class": PowerUpBasicProjectile,
-                "active": True
+                "active": False
             },
             "piercing_projectile": {
                 "class": PowerUpPiercingProjectile,
-                "active": True
+                "active": False
             }
         }
 

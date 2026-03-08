@@ -1,3 +1,4 @@
+# gerente dos cheats
 init python:
 
     import pygame
