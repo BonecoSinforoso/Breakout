@@ -32,4 +32,4 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.timer_slow_down = 10.0
+            game.balls_manager.timer_slow_down = 10.0

@@ -9,7 +9,7 @@ init python:
                 # Q: forca derrota
                 if ev.key == pygame.K_q:
                     game.lives = 0
-                    game.balls.clear()
+                    game.balls_manager.balls.clear()
                 
                 # W: forca vitoria
                 elif ev.key == pygame.K_w:

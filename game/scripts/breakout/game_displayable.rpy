@@ -18,14 +18,9 @@ init python:
             self.timer_giant_ball = 0
 
             # bola
-            self.ball_default_image = Image("images/balls/ball_white.png")
-            self.ball_fire_image = Image("images/balls/ball_fire.png")
-            self.ball_giant_image = Image("images/balls/ball_giant.png")
-                        
-            self.balls = [
-                Ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
-            ]
-
+            self.balls_manager = BallsManager()
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
+            
             # outros
             self.arsenal = Arsenal()
             self.debugger = Debugger()            
@@ -51,11 +46,10 @@ init python:
 
         def visit(self):
             block_frames = self.block_grid.get_all_frames()
-            return [self.paddle.image, self.ball_default_image] + block_frames
+            return [self.paddle.image, self.balls_manager.ball_default_image, self.balls_manager.ball_fire_image, self.balls_manager.ball_giant_image] + block_frames
 
         def _lose_life(self):
             self.lives -= 1
-
             self.powerups.clear()
             self.reset_powerup_effects()
 
@@ -65,19 +59,13 @@ init python:
             else:
                 self.stuck = True
                 renpy.sound.play("ball_out.wav", channel=2)
-
-                self.balls = [
-                    Ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
-                ]
+                
+            self.balls_manager.clear()
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
 
         def reset_powerup_effects(self):
             self.paddle.reset_effects()
-            
-            self.timer_slow_down = 0
-            self.timer_fire_ball = 0
-            self.timer_giant_ball = 0
-            
-            self.paddle.width = self.paddle.default_width
+            self.balls_manager.reset_effects()
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -157,109 +145,11 @@ init python:
             # raquete
             self.paddle.render(r, width, height, st, at)
 
-            # Define os limites para quique da bola na parede
-            ball_top = COURT_TOP + BALL_HEIGHT / 2
-            ball_left = COURT_LEFT + BALL_WIDTH / 2
-            ball_right = COURT_RIGHT - BALL_WIDTH / 2
-
-            # Loop por cada bola ativa na tela
-            for ball in self.balls[:]: 
-                
-                # Propriedades da Bola
-                current_ball_speed = ball.speed
-                b_image = self.ball_default_image
-                b_w = BALL_WIDTH
-                b_h = BALL_HEIGHT
-                is_fireball = (self.timer_fire_ball > 0)
-
-                if self.timer_slow_down > 0 and ball.dy > 0:
-                    current_ball_speed *= 0.5
-                
-                if self.timer_giant_ball > 0:
-                    current_ball_speed *= 1.5
-                    b_image = self.ball_giant_image
-                    b_w = 32
-                    b_h = 32
-                elif is_fireball:
-                    b_image = self.ball_fire_image
-                # --------------------------------------
-                
-                speed = delta_time * current_ball_speed
-                old_ball_y = ball.y
-
-                # Movimento
-                if ball.stuck:
-                    ball.x = self.paddle.x
-                    ball.y = PADDLE_Y - 20
-                else:
-                    ball.x += ball.dx * speed
-                    ball.y += ball.dy * speed
-
-                # paredes usam b_w e b_h
-                ball_top = COURT_TOP + b_h / 2
-                ball_left = COURT_LEFT + b_w / 2
-                ball_right = COURT_RIGHT - b_w / 2
-
-                # Colisão com o Teto
-                if ball.y < ball_top:
-                    ball.y = ball_top + (ball_top - ball.y)
-                    ball.dy = -ball.dy
-                    if not ball.stuck:
-                        renpy.sound.play("ball_collision.wav", channel=0)
-
-                # Colisão Parede Esquerda
-                if ball.x < ball_left:
-                    ball.x = ball_left + (ball_left - ball.x)
-                    ball.dx = -ball.dx
-                    if not ball.stuck:
-                        renpy.sound.play("ball_collision.wav", channel=0)
-
-                # Colisão Parede Direita
-                if ball.x > ball_right:
-                    ball.x = ball_right - (ball.x - ball_right)
-                    ball.dx = -ball.dx
-                    if not ball.stuck:
-                        renpy.sound.play("ball_collision.wav", channel=0)
-
-                # Colisão com os Blocos (Agora passamos as dimensões atuais e o status de Fogo)
-                ball.dx, ball.dy, score, new_powerups = self.block_grid.check_collision(ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball)
-
-                self.score += score
-                store.player_score = self.score
-                self.powerups.extend(new_powerups)
-
-                # --- COLISÃO COM A RAQUETE (Com Ângulo Dinâmico) ---
-                paddle_left = self.paddle.x - self.paddle.width / 2
-                paddle_right = self.paddle.x + self.paddle.width / 2
-                hotside = PADDLE_Y - PADDLE_HEIGHT / 2
-
-                if paddle_left <= ball.x <= paddle_right:
-                    hit = False
-                    if old_ball_y >= hotside >= ball.y:
-                        ball.y = hotside - (ball.y - hotside)
-                        hit = True
-                    elif old_ball_y <= hotside <= ball.y:
-                        ball.y = hotside - (ball.y - hotside)
-                        hit = True
-
-                    if hit:
-                        renpy.sound.play("ball_collision.wav", channel=0)
-                        
-                        dist_from_center = ball.x - self.paddle.x
-                        normalized_dist = max(-1.0, min(1.0, dist_from_center / (self.paddle.width / 2)))
-                        bounce_angle = normalized_dist * 1.047 
-                        
-                        ball.dx = math.sin(bounce_angle) * 0.707
-                        ball.dy = -math.cos(bounce_angle) * 0.707
-                # ---------------------------------------------------
-
-                # Renderiza a bola
-                ball_img = renpy.render(b_image, width, height, st, at)
-                r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
-
-                # Verifica Morte desta bola específica
-                if ball.y > 1080:
-                    self.balls.remove(ball)
+            points_earned, new_powerups = self.balls_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self.block_grid)
+            
+            self.score += points_earned
+            store.player_score = self.score
+            self.powerups.extend(new_powerups)
 
             # Render dos Blocos
             self.block_grid.render(r, width, height, st, at)
@@ -288,7 +178,7 @@ init python:
             # --------------------------
 
             # derrota/vitoria
-            if len(self.balls) == 0 and not self.winner:
+            if self.balls_manager.is_empty() and not self.winner:
                 renpy.sound.play("result_lose.mp3", channel=0)
                 self._lose_life()
                 renpy.timeout(0)
@@ -320,7 +210,7 @@ init python:
             # botao do mouse
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
                 self.stuck = False                
-                for ball in self.balls: ball.stuck = False
+                self.balls_manager.release_all()
 
             self.arsenal.handle_input(ev, self)
             self.debugger.handle_input(ev, self)
