@@ -1,4 +1,7 @@
 # TODO: desacoplar excessos (timers)
+# TODO: tirar label
+# TODO: refactor render
+# TODO: melhorar sistema de projetil
 init python:
 
     import math
@@ -27,14 +30,22 @@ init python:
             self.ball_default_image = Image("images/balls/ball_white.png")
             self.ball_fire_image = Image("images/balls/ball_fire.png")
             self.ball_giant_image = Image("images/balls/ball_giant.png")
-            
-            # Começa o jogo com uma bola travada na raquete
+                        
             self.balls = [
                 Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
             ]
 
+            # municao
+            self.ammo_basic_projectile = 0
+            self.ammo_piercing_projectile = 0
+
+            # cooldowns
+            self.cd_basic_projectile = 0
+            self.cd_piercing_projectile = 0
+
             # outros
             self.powerups = []
+            self.projectiles = []
 
             self.stuck = True
             self.score = 0
@@ -117,6 +128,52 @@ init python:
                 self.timer_giant_ball -= delta_time
                 if self.timer_giant_ball < 0:
                     self.timer_giant_ball = 0
+
+            # cooldown dos projeteis
+            if self.cd_basic_projectile > 0: self.cd_basic_projectile -= delta_time
+            if self.cd_piercing_projectile > 0: self.cd_piercing_projectile -= delta_time
+
+            # fisica dos projeteis
+            for projectile in self.projectiles[:]:
+                projectile.update(delta_time)
+                projectile.render(r, width, height, st, at)
+                
+                if projectile.y < 0:
+                    self.projectiles.remove(projectile)
+                    continue
+                                
+                p_left = projectile.x - projectile.width / 2
+                p_right = projectile.x + projectile.width / 2
+                p_top = projectile.y - projectile.height / 2
+                p_bottom = projectile.y + projectile.height / 2
+
+                hit_something = False
+
+                for block in self.block_grid.blocks:
+                    if not block.active: continue
+                    
+                    b_left, b_top = block.x, block.y
+                    b_right, b_bottom = block.x + block.WIDTH, block.y + block.HEIGHT
+                    
+                    if (p_right >= b_left and p_left <= b_right and 
+                        p_bottom >= b_top and p_top <= b_bottom):
+                        
+                        renpy.sound.play("ball_collision.wav", channel=0)
+                        
+                        if projectile.is_piercing:
+                            while block.active:
+                                destroyed, points = block.hit()
+                                self.score += points
+                        else:
+                            destroyed, points = block.hit()
+                            self.score += points
+                            hit_something = True
+                            break
+                
+                if hit_something:
+                    self.projectiles.remove(projectile)
+            
+            store.player_score = self.score # Atualiza a pontuação global no final
 
             # Renderiza a raquete uma única vez
             pi = renpy.render(self.paddle, width, height, st, at)
@@ -278,6 +335,7 @@ init python:
         def event(self, ev, x, y, st):
             import pygame
 
+            # botao do mouse
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
                 self.stuck = False
                 
@@ -289,7 +347,7 @@ init python:
                 self.lives = 0
                 self.balls.clear()
 
-            # Tecla w: destroi todos os blocos
+            # Tecla W: destroi todos os blocos
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_w:
                 for block in self.block_grid.blocks:
                     while block.active:
@@ -298,10 +356,35 @@ init python:
                                 
                 store.player_score = self.score
 
+            # Tecla Z - tiro basico
+            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_z:
+                if self.ammo_basic_projectile > 0 and self.cd_basic_projectile <= 0:
+                    self.ammo_basic_projectile -= 1
+                    self.cd_basic_projectile = 0.3
+
+                    renpy.sound.play("projectile_basic.wav", channel=3)
+                    
+                    self.projectiles.append(
+                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 500, False, "images/projectiles/projectile_basic_00.png")
+                    )
+
+            # Tecla X: tiro perfurante
+            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_x:
+                if self.ammo_piercing_projectile > 0 and self.cd_piercing_projectile <= 0:
+                    self.ammo_piercing_projectile -= 1
+                    self.cd_piercing_projectile = 0.6
+
+                    renpy.sound.play("projectile_piercing.wav", channel=3)
+                    
+                    self.projectiles.append(
+                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 600, True, "images/projectiles/projectile_piercing_00.png")
+                    )
+
             renpy.restart_interaction()
 
             x = max(x, COURT_LEFT)
             x = min(x, COURT_RIGHT)
+
             self.player_x = x
 
             if self.winner:

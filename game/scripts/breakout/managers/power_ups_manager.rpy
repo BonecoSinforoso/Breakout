@@ -26,6 +26,14 @@ init 1 python:
             },
             "giant_ball": {
                 "class": PowerUpGiantBall,
+                "active": False
+            },
+            "basic_projectile": {
+                "class": PowerUpBasicProjectile,
+                "active": True
+            },
+            "piercing_projectile": {
+                "class": PowerUpPiercingProjectile,
                 "active": True
             }
         }

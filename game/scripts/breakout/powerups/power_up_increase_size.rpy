@@ -5,7 +5,7 @@ init python:
         WIDTH = 32
         HEIGHT = 32
         SPEED = 150
-        FPS = 8
+        FPS = 6
         
         SPRITES = [
             "images/powerups/power_up_increase_size_00.png",
