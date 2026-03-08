@@ -5,18 +5,19 @@ init python:
 
     class BlocksManager:
 
-        BLOCK_COLS = 10
-        BLOCK_ROWS = 4
+        BLOCK_COLS = 9
+        BLOCK_ROWS = 5
         BLOCK_PADDING = 2
         BLOCK_OFFSET_Y = 2
 
         # Mapa: linha -> classe do bloco
         # Altere aqui para mudar quais tipos aparecem em cada linha
         ROW_BLOCK_TYPES = {
-            0: (BlockSmall, "blue"),
-            1: (BlockDouble, "brown"),
-            2: (BlockTriple, "gray"),
+            0: (BlockBrick, "blue"),
+            1: (BlockTriple, "gray"),
+            2: (BlockDouble, "brown"),
             3: (BlockBig, "red"),
+            4: (BlockSmall, "yellow")
         }
 
         def __init__(self, court_left, court_top):
