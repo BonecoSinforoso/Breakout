@@ -1,4 +1,5 @@
 # gerente dos cheats
+# TODO: nome seguindo o padrao nn seria cheatManager?
 init python:
 
     import pygame

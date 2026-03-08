@@ -20,11 +20,11 @@ init 1 python:
             },
             "fire_ball": {
                 "class": PowerUpFireball,
-                "active": True
+                "active": False
             },
             "giant_ball": {
                 "class": PowerUpGiantBall,
-                "active": True
+                "active": False
             },
             "basic_projectile": {
                 "class": PowerUpBasicProjectile,
@@ -32,7 +32,7 @@ init 1 python:
             },
             "piercing_projectile": {
                 "class": PowerUpPiercingProjectile,
-                "active": False
+                "active": True
             }
         }
 
