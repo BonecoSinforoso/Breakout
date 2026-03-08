@@ -34,4 +34,4 @@ init python:
         def apply_effect(self, game):
             game.paddle_width = 128
             game.paddle = Image("images/paddles/paddle_red_04.png")
-            game.timer_increase_size = 10.0
+            game.paddle.timer_increase_size

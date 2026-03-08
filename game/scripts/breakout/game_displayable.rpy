@@ -1,5 +1,4 @@
 # TODO: desacoplar excessos (timers)
-# TODO: tirar label
 # TODO: refactor render
 # TODO: melhorar sistema de projetil
 init python:
@@ -11,17 +10,9 @@ init python:
         def __init__(self):
             renpy.Displayable.__init__(self)
 
-            self.player_x = 1920 / 2
-
-            # raquete
-            self.paddle = Image("images/paddles/paddle_red_02.png")
-            self.paddle_width = 64
-
-            self.paddle_default_width = 64
-            self.paddle_default_image = Image("images/paddles/paddle_red_02.png")
-
+            self.paddle = Paddle(1920 / 2)
+            
             # timers
-            self.timer_increase_size = 0
             self.timer_slow_down = 0
             self.timer_fire_ball = 0
             self.timer_giant_ball = 0
@@ -32,7 +23,7 @@ init python:
             self.ball_giant_image = Image("images/balls/ball_giant.png")
                         
             self.balls = [
-                Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
+                Ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
             ]
 
             # municao
@@ -66,7 +57,7 @@ init python:
 
         def visit(self):
             block_frames = self.block_grid.get_all_frames()
-            return [self.paddle, self.ball_default_image] + block_frames
+            return [self.paddle.image, self.ball_default_image] + block_frames
 
         def _lose_life(self):
             self.lives -= 1
@@ -82,17 +73,17 @@ init python:
                 renpy.sound.play("ball_out.wav", channel=2)
 
                 self.balls = [
-                    Ball(self.player_x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
+                    Ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
                 ]
 
         def reset_powerup_effects(self):
-            self.timer_increase_size = 0
+            self.paddle.reset_effects()
+            
             self.timer_slow_down = 0
             self.timer_fire_ball = 0
             self.timer_giant_ball = 0
             
-            self.paddle_width = self.paddle_default_width
-            self.paddle = self.paddle_default_image
+            self.paddle.width = self.paddle.default_width
 
         def render(self, width, height, st, at):
             r = renpy.Render(width, height)
@@ -106,14 +97,9 @@ init python:
             if not self.stuck and not self.winner:
                 self.time_elapsed += delta_time
 
-            # timers
-            if self.timer_increase_size > 0:
-                self.timer_increase_size -= delta_time
-                if self.timer_increase_size <= 0:
-                    self.timer_increase_size = 0
-                    self.paddle_width = self.paddle_default_width
-                    self.paddle = self.paddle_default_image
+            self.paddle.update(delta_time)
 
+            # timers
             if self.timer_slow_down > 0:
                 self.timer_slow_down -= delta_time
                 if self.timer_slow_down < 0:
@@ -173,11 +159,10 @@ init python:
                 if hit_something:
                     self.projectiles.remove(projectile)
             
-            store.player_score = self.score # Atualiza a pontuação global no final
+            store.player_score = self.score
 
-            # Renderiza a raquete uma única vez
-            pi = renpy.render(self.paddle, width, height, st, at)
-            r.blit(pi, (int(self.player_x - self.paddle_width / 2), int(PADDLE_Y - PADDLE_HEIGHT / 2)))
+            # raquete
+            self.paddle.render(r, width, height, st, at)
 
             # Define os limites para quique da bola na parede
             ball_top = COURT_TOP + BALL_HEIGHT / 2
@@ -211,7 +196,7 @@ init python:
 
                 # Movimento
                 if ball.stuck:
-                    ball.x = self.player_x
+                    ball.x = self.paddle.x
                     ball.y = PADDLE_Y - 20
                 else:
                     ball.x += ball.dx * speed
@@ -251,8 +236,8 @@ init python:
                 self.powerups.extend(new_powerups)
 
                 # --- COLISÃO COM A RAQUETE (Com Ângulo Dinâmico) ---
-                paddle_left = self.player_x - self.paddle_width / 2
-                paddle_right = self.player_x + self.paddle_width / 2
+                paddle_left = self.paddle.x - self.paddle.width / 2
+                paddle_right = self.paddle.x + self.paddle.width / 2
                 hotside = PADDLE_Y - PADDLE_HEIGHT / 2
 
                 if paddle_left <= ball.x <= paddle_right:
@@ -267,8 +252,8 @@ init python:
                     if hit:
                         renpy.sound.play("ball_collision.wav", channel=0)
                         
-                        dist_from_center = ball.x - self.player_x
-                        normalized_dist = max(-1.0, min(1.0, dist_from_center / (self.paddle_width / 2)))
+                        dist_from_center = ball.x - self.paddle.x
+                        normalized_dist = max(-1.0, min(1.0, dist_from_center / (self.paddle.width / 2)))
                         bounce_angle = normalized_dist * 1.047 
                         
                         ball.dx = math.sin(bounce_angle) * 0.707
@@ -295,8 +280,8 @@ init python:
                 pu_right = pu.x + pu.WIDTH / 2
                 pu_bottom = pu.y + pu.HEIGHT / 2
                 
-                paddle_left = self.player_x - self.paddle_width / 2
-                paddle_right = self.player_x + self.paddle_width / 2
+                paddle_left = self.paddle.x - self.paddle.width / 2
+                paddle_right = self.paddle.x + self.paddle.width / 2
                 paddle_top = PADDLE_Y - PADDLE_HEIGHT / 2
                 paddle_bottom = PADDLE_Y + PADDLE_HEIGHT / 2
                 
@@ -370,7 +355,7 @@ init python:
                     ]
 
                     self.projectiles.append(
-                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 500, False, frames)
+                        Projectile(self.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 500, False, frames)
                     )
 
             # Tecla X: tiro perfurante
@@ -387,7 +372,7 @@ init python:
                     ]
                     
                     self.projectiles.append(
-                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 600, True, frames)
+                        Projectile(self.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 600, True, frames)
                     )
 
             renpy.restart_interaction()
@@ -395,7 +380,7 @@ init python:
             x = max(x, COURT_LEFT)
             x = min(x, COURT_RIGHT)
 
-            self.player_x = x
+            self.paddle.x = x
 
             if self.winner:
                 return self.winner
