@@ -358,7 +358,7 @@ init python:
 
             # Tecla Z - tiro basico
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_z:
-                if self.ammo_basic_projectile > 0 and self.cd_basic_projectile <= 0:
+                if not self.stuck and not self.winner and self.ammo_basic_projectile > 0 and self.cd_basic_projectile <= 0:
                     self.ammo_basic_projectile -= 1
                     self.cd_basic_projectile = 0.3
 
@@ -375,7 +375,7 @@ init python:
 
             # Tecla X: tiro perfurante
             if ev.type == pygame.KEYDOWN and ev.key == pygame.K_x:
-                if self.ammo_piercing_projectile > 0 and self.cd_piercing_projectile <= 0:
+                if not self.stuck and not self.winner and self.ammo_piercing_projectile > 0 and self.cd_piercing_projectile <= 0:
                     self.ammo_piercing_projectile -= 1
                     self.cd_piercing_projectile = 0.6
 
