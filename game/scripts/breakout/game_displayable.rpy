@@ -1,4 +1,4 @@
-# TODO: melhorar sistema de projetil
+# maestro do jogo
 init python:
 
     import math
@@ -8,6 +8,7 @@ init python:
         def __init__(self):
             renpy.Displayable.__init__(self)
 
+            # raquete
             self.paddle = Paddle(1920 / 2)
 
             # bola
@@ -16,8 +17,9 @@ init python:
             
             # outros
             self.arsenal = Arsenal()
-            self.debugger = Debugger()            
-            self.powerups = []
+            self.debugger = Debugger()
+            self.power_ups_manager = PowerUpsManager()
+            
             self.projectiles = []
 
             self.stuck = True
@@ -43,7 +45,7 @@ init python:
 
         def _lose_life(self):
             self.lives -= 1
-            self.powerups.clear()
+            self.power_ups_manager.clear()
             self.reset_powerup_effects()
 
             if self.lives <= 0:
@@ -77,8 +79,6 @@ init python:
             projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.block_grid)
             self.score += projectile_points
 
-            store.player_score = self.score
-
             # raquete
             self.paddle.render(r, width, height, st, at)
 
@@ -86,34 +86,13 @@ init python:
             
             self.score += points_earned
             store.player_score = self.score
-            
-            self.powerups.extend(new_powerups)
+
+            self.power_ups_manager.add(new_powerups)
 
             # Render dos Blocos
             self.block_grid.render(r, width, height, st, at)
 
-            # --- Logica dos PowerUps ---
-            for pu in self.powerups[:]:
-                pu.update(delta_time)
-                pu.render(r, width, height, st, at)
-                
-                pu_left = pu.x - pu.WIDTH / 2
-                pu_right = pu.x + pu.WIDTH / 2
-                pu_bottom = pu.y + pu.HEIGHT / 2
-                
-                paddle_left = self.paddle.x - self.paddle.width / 2
-                paddle_right = self.paddle.x + self.paddle.width / 2
-                paddle_top = PADDLE_Y - PADDLE_HEIGHT / 2
-                paddle_bottom = PADDLE_Y + PADDLE_HEIGHT / 2
-                
-                if (pu_right >= paddle_left and pu_left <= paddle_right and 
-                    pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
-                    pu.apply_effect(self)
-                    self.powerups.remove(pu)
-                    renpy.sound.play("power_up_collected.wav", channel=1)
-                elif pu.y > 1080:
-                    self.powerups.remove(pu)
-            # --------------------------
+            self.power_ups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self)
 
             # derrota/vitoria
             if self.balls_manager.is_empty() and not self.winner:
