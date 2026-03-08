@@ -31,4 +31,4 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.ammo_basic_projectile += 3
+            game.arsenal.ammo_basic += 3

@@ -44,9 +44,9 @@ screen game_screen():
         hbox:
             spacing 10
             add "images/projectiles/projectile_basic_00.png" zoom 0.5
-            text "Z: [game.ammo_basic_projectile]" size 30
+            text "Z: [game.arsenal.ammo_basic]" size 30
             
         hbox:
             spacing 10
             add "images/projectiles/projectile_piercing_00.png" zoom 0.5
-            text "X: [game.ammo_piercing_projectile]" size 30
+            text "X: [game.arsenal.ammo_piercing]" size 30

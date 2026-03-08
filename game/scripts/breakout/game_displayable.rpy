@@ -26,15 +26,9 @@ init python:
                 Ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
             ]
 
-            # municao
-            self.ammo_basic_projectile = 0
-            self.ammo_piercing_projectile = 0
-
-            # cooldowns
-            self.cd_basic_projectile = 0
-            self.cd_piercing_projectile = 0
-
             # outros
+            self.arsenal = Arsenal()
+            self.debugger = Debugger()            
             self.powerups = []
             self.projectiles = []
 
@@ -115,9 +109,8 @@ init python:
                 if self.timer_giant_ball < 0:
                     self.timer_giant_ball = 0
 
-            # cooldown dos projeteis
-            if self.cd_basic_projectile > 0: self.cd_basic_projectile -= delta_time
-            if self.cd_piercing_projectile > 0: self.cd_piercing_projectile -= delta_time
+            # arsenal
+            self.arsenal.update(delta_time)
 
             # fisica dos projeteis
             for projectile in self.projectiles[:]:
@@ -320,67 +313,19 @@ init python:
         def event(self, ev, x, y, st):
             import pygame
 
-            # botao do mouse
-            if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
-                self.stuck = False
-                
-                for ball in self.balls:
-                    ball.stuck = False
-
-            # Tecla Q: desiste e vai pro You Lose
-            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_q:
-                self.lives = 0
-                self.balls.clear()
-
-            # Tecla W: destroi todos os blocos
-            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_w:
-                for block in self.block_grid.blocks:
-                    while block.active:
-                        destroyed, points = block.hit()
-                        self.score += points
-                                
-                store.player_score = self.score
-
-            # Tecla Z - tiro basico
-            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_z:
-                if not self.stuck and not self.winner and self.ammo_basic_projectile > 0 and self.cd_basic_projectile <= 0:
-                    self.ammo_basic_projectile -= 1
-                    self.cd_basic_projectile = 0.3
-
-                    renpy.sound.play("projectile_basic.wav", channel=3)
-                    
-                    frames = [
-                        "images/projectiles/projectile_basic_{:02d}.png".format(i) 
-                        for i in range(4)
-                    ]
-
-                    self.projectiles.append(
-                        Projectile(self.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 500, False, frames)
-                    )
-
-            # Tecla X: tiro perfurante
-            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_x:
-                if not self.stuck and not self.winner and self.ammo_piercing_projectile > 0 and self.cd_piercing_projectile <= 0:
-                    self.ammo_piercing_projectile -= 1
-                    self.cd_piercing_projectile = 0.6
-
-                    renpy.sound.play("projectile_piercing.wav", channel=3)
-                    
-                    frames = [
-                        "images/projectiles/projectile_piercing_{:02d}.png".format(i) 
-                        for i in range(4)
-                    ]
-                    
-                    self.projectiles.append(
-                        Projectile(self.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 600, True, frames)
-                    )
-
-            renpy.restart_interaction()
-
             x = max(x, COURT_LEFT)
             x = min(x, COURT_RIGHT)
-
             self.paddle.x = x
+
+            # botao do mouse
+            if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
+                self.stuck = False                
+                for ball in self.balls: ball.stuck = False
+
+            self.arsenal.handle_input(ev, self)
+            self.debugger.handle_input(ev, self)
+            
+            renpy.restart_interaction()            
 
             if self.winner:
                 return self.winner
