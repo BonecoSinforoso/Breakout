@@ -9,7 +9,7 @@ init 1 python:
         CATALOG = {
             "increase_size": {
                 "class": PowerUpIncreaseSize, 
-                "active": False
+                "active": True
             },
             "slow_down": {
                 "class": PowerUpSlowDown, 
@@ -33,7 +33,7 @@ init 1 python:
             },
             "piercing_projectile": {
                 "class": PowerUpPiercingProjectile,
-                "active": True
+                "active": False
             }
         }
 
