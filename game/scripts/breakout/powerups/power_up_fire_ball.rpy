@@ -31,4 +31,5 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.balls_manager.timer_fire_ball = 8.0
+            game.balls_manager.timer_fire_ball += 8.0
+            game.balls_manager.timer_giant_ball = 0
