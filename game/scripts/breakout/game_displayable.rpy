@@ -74,49 +74,9 @@ init python:
 
             self.paddle.update(delta_time)
 
-            # arsenal
-            self.arsenal.update(delta_time)
+            projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.block_grid)
+            self.score += projectile_points
 
-            # fisica dos projeteis
-            for projectile in self.projectiles[:]:
-                projectile.update(delta_time)
-                projectile.render(r, width, height, st, at)
-                
-                if projectile.y < 0:
-                    self.projectiles.remove(projectile)
-                    continue
-                                
-                p_left = projectile.x - projectile.width / 2
-                p_right = projectile.x + projectile.width / 2
-                p_top = projectile.y - projectile.height / 2
-                p_bottom = projectile.y + projectile.height / 2
-
-                hit_something = False
-
-                for block in self.block_grid.blocks:
-                    if not block.active: continue
-                    
-                    b_left, b_top = block.x, block.y
-                    b_right, b_bottom = block.x + block.WIDTH, block.y + block.HEIGHT
-                    
-                    if (p_right >= b_left and p_left <= b_right and 
-                        p_bottom >= b_top and p_top <= b_bottom):
-                        
-                        renpy.sound.play("ball_collision.wav", channel=0)
-                        
-                        if projectile.is_piercing:
-                            while block.active:
-                                destroyed, points = block.hit()
-                                self.score += points
-                        else:
-                            destroyed, points = block.hit()
-                            self.score += points
-                            hit_something = True
-                            break
-                
-                if hit_something:
-                    self.projectiles.remove(projectile)
-            
             store.player_score = self.score
 
             # raquete
@@ -126,6 +86,7 @@ init python:
             
             self.score += points_earned
             store.player_score = self.score
+            
             self.powerups.extend(new_powerups)
 
             # Render dos Blocos
