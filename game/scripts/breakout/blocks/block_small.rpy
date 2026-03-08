@@ -8,7 +8,7 @@ init python:
 
         POINTS_HIT = 5
         POINTS_DESTROY = 10
-        DROP_CHANCE = 0.5
+        DROP_CHANCE = 0.1
 
         ANIM_DELAY = 0.0
 
