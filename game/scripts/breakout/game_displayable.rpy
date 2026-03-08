@@ -364,8 +364,13 @@ init python:
 
                     renpy.sound.play("projectile_basic.wav", channel=3)
                     
+                    frames = [
+                        "images/projectiles/projectile_basic_{:02d}.png".format(i) 
+                        for i in range(4)
+                    ]
+
                     self.projectiles.append(
-                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 500, False, "images/projectiles/projectile_basic_00.png")
+                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 500, False, frames)
                     )
 
             # Tecla X: tiro perfurante
@@ -376,8 +381,13 @@ init python:
 
                     renpy.sound.play("projectile_piercing.wav", channel=3)
                     
+                    frames = [
+                        "images/projectiles/projectile_piercing_{:02d}.png".format(i) 
+                        for i in range(4)
+                    ]
+                    
                     self.projectiles.append(
-                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 600, True, "images/projectiles/projectile_piercing_00.png")
+                        Projectile(self.player_x, PADDLE_Y - PADDLE_HEIGHT, 600, True, frames)
                     )
 
             renpy.restart_interaction()
