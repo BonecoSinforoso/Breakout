@@ -49,8 +49,7 @@ init 1 python:
             return chosen_powerup(x, y)
             
         @classmethod
-        def set_active(cls, powerup_name, is_active):
-            
+        def set_active(cls, powerup_name, is_active):            
             if powerup_name in cls.CATALOG:
                 cls.CATALOG[powerup_name]["active"] = is_active
 
