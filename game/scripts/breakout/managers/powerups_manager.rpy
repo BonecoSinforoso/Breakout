@@ -81,7 +81,7 @@ init 1 python:
                     
                     pu.apply_effect(game)
                     self.active_powerups.remove(pu)
-                    renpy.sound.play("power_up_collected.wav", channel=1)
+                    renpy.sound.play("powerup_collected.wav", channel=1)
                 
                 elif pu.y > 1080:
                     self.active_powerups.remove(pu)

@@ -8,12 +8,12 @@ init python:
         FPS = 6
         
         SPRITES = [
-            "images/powerups/power_up_piercing_projectile_00.png",
-            "images/powerups/power_up_piercing_projectile_01.png",
-            "images/powerups/power_up_piercing_projectile_02.png",
-            "images/powerups/power_up_piercing_projectile_03.png",
-            "images/powerups/power_up_piercing_projectile_04.png",
-            "images/powerups/power_up_piercing_projectile_05.png"
+            "images/powerups/powerup_piercing_projectile_00.png",
+            "images/powerups/powerup_piercing_projectile_01.png",
+            "images/powerups/powerup_piercing_projectile_02.png",
+            "images/powerups/powerup_piercing_projectile_03.png",
+            "images/powerups/powerup_piercing_projectile_04.png",
+            "images/powerups/powerup_piercing_projectile_05.png"
         ]
 
         def __init__(self, x, y):

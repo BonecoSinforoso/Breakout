@@ -18,7 +18,7 @@ init python:
             # outros
             self.arsenal = Arsenal()
             self.debugger = Debugger()
-            self.power_ups_manager = PowerUpsManager()
+            self.powerups_manager = PowerUpsManager()
             
             self.projectiles = []
 
@@ -45,7 +45,7 @@ init python:
 
         def _lose_life(self):
             self.lives -= 1
-            self.power_ups_manager.clear()
+            self.powerups_manager.clear()
             self.reset_powerup_effects()
 
             if self.lives <= 0:
@@ -87,12 +87,12 @@ init python:
             self.score += points_earned
             store.player_score = self.score
 
-            self.power_ups_manager.add(new_powerups)
+            self.powerups_manager.add(new_powerups)
 
             # Render dos Blocos
             self.block_grid.render(r, width, height, st, at)
 
-            self.power_ups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self)
+            self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self)
 
             # derrota/vitoria
             if self.balls_manager.is_empty() and not self.winner:
