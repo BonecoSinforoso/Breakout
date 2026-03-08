@@ -99,25 +99,29 @@ init python:
                 # Colisao com a Raquete
                 paddle_left = paddle.x - paddle.width / 2
                 paddle_right = paddle.x + paddle.width / 2
-                hotside = PADDLE_Y - PADDLE_HEIGHT / 2
+                paddle_top = PADDLE_Y - paddle.height / 2
+                paddle_bottom = PADDLE_Y + paddle.height / 2
 
-                if paddle_left <= ball.x <= paddle_right:
-                    hit = False
-                    if old_ball_y >= hotside >= ball.y:
-                        ball.y = hotside - (ball.y - hotside)
-                        hit = True
-                    elif old_ball_y <= hotside <= ball.y:
-                        ball.y = hotside - (ball.y - hotside)
-                        hit = True
+                ball_left = ball.x - b_w / 2
+                ball_right = ball.x + b_w / 2
+                ball_top = ball.y - b_h / 2
+                ball_bottom = ball.y + b_h / 2
 
-                    if hit:
-                        renpy.sound.play("ball_collision.wav", channel=0)
-                        dist_from_center = ball.x - paddle.x
-                        normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
-                        bounce_angle = normalized_dist * 1.047 
-                        
-                        ball.dx = math.sin(bounce_angle) * 0.707
-                        ball.dy = -math.cos(bounce_angle) * 0.707
+                if (ball_right >= paddle_left and ball_left <= paddle_right and 
+                    ball_bottom >= paddle_top and ball_top <= paddle_bottom):
+                    
+                    renpy.sound.play("ball_collision.wav", channel=0)
+                    
+                    ball.y = paddle_top - (b_h / 2) - 1
+                    
+                    dist_from_center = ball.x - paddle.x
+                    
+                    normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
+                    
+                    bounce_angle = normalized_dist * 1.047 
+                    
+                    ball.dx = math.sin(bounce_angle) * 0.707
+                    ball.dy = -abs(math.cos(bounce_angle) * 0.707)
 
                 # Renderiza a bola
                 ball_img = renpy.render(b_image, width, height, st, at)
