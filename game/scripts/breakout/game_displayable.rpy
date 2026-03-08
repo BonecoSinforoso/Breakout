@@ -13,7 +13,7 @@ init python:
 
             # bola
             self.balls_manager = BallsManager()
-            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
             
             # outros
             self.arsenal = Arsenal()
@@ -56,7 +56,7 @@ init python:
                 renpy.sound.play("ball_out.wav", channel=2)
                 
             self.balls_manager.clear()
-            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, 0.5, -0.5, BALL_SPEED_DEFAULT, stuck=True)
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
 
         def reset_powerup_effects(self):
             self.paddle.reset_effects()

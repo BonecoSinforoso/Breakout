@@ -14,8 +14,14 @@ init python:
             self.ball_fire_image = Image("images/balls/ball_fire.png")
             self.ball_giant_image = Image("images/balls/ball_giant.png")
 
-        def spawn_ball(self, x, y, dx, dy, speed, stuck=False):
-            self.balls.append(Ball(x, y, dx, dy, speed, stuck=stuck))
+        def spawn_ball(self, x, y, dx=0, dy=0, stuck=False):
+            import random
+                        
+            if dx == 0 and dy == 0:
+                dx = 0.707 * random.choice([-1, 1])
+                dy = -0.707
+                
+            self.balls.append(Ball(x, y, dx, dy, BALL_SPEED_DEFAULT, stuck=stuck))
 
         def clear(self):
             self.balls.clear()
@@ -40,6 +46,7 @@ init python:
             points_earned = 0
             new_powerups = []
             is_fireball = (self.timer_fire_ball > 0)
+            is_giantball = (self.timer_giant_ball > 0)
 
             for ball in self.balls[:]: 
                 current_ball_speed = ball.speed
@@ -107,7 +114,8 @@ init python:
                 ball_top = ball.y - b_h / 2
                 ball_bottom = ball.y + b_h / 2
 
-                if (ball_right >= paddle_left and ball_left <= paddle_right and 
+                if (ball.dy > 0 and 
+                    ball_right >= paddle_left and ball_left <= paddle_right and 
                     ball_bottom >= paddle_top and ball_top <= paddle_bottom):
                     
                     renpy.sound.play("ball_collision.wav", channel=0)

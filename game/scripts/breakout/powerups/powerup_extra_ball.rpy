@@ -42,7 +42,6 @@ init python:
                 game.paddle.x, 
                 PADDLE_Y - 20, 
                 new_dx, 
-                new_dy, 
-                BALL_SPEED_DEFAULT, 
+                new_dy,
                 stuck=False
             )
