@@ -1,6 +1,6 @@
 init python:
 
-    class PowerUpFireball:
+    class PowerUpIncreaseSize:
 
         WIDTH = 32
         HEIGHT = 32
@@ -8,12 +8,12 @@ init python:
         FPS = 6
         
         SPRITES = [
-            "images/powerups/power_up_fire_ball_00.png",
-            "images/powerups/power_up_fire_ball_01.png",
-            "images/powerups/power_up_fire_ball_02.png",
-            "images/powerups/power_up_fire_ball_03.png",
-            "images/powerups/power_up_fire_ball_04.png",
-            "images/powerups/power_up_fire_ball_05.png"
+            "images/powerups/powerup_increase_size_00.png",
+            "images/powerups/powerup_increase_size_01.png",
+            "images/powerups/powerup_increase_size_02.png",
+            "images/powerups/powerup_increase_size_03.png",
+            "images/powerups/powerup_increase_size_04.png",
+            "images/powerups/powerup_increase_size_05.png"
         ]
 
         def __init__(self, x, y):
@@ -27,8 +27,11 @@ init python:
         def render(self, r, width, height, st, at):
             frame_index = int(st * self.FPS) % len(self.frames)
             surf = self.frames[frame_index]
+            
             rendered = renpy.render(surf, self.WIDTH, self.HEIGHT, st, at)
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.timer_fire_ball = 8.0
+            game.paddle_width = 128
+            game.paddle = Image("images/paddles/paddle_red_04.png")
+            game.paddle.timer_increase_size

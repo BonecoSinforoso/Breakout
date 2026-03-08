@@ -1,6 +1,9 @@
 init python:
 
-    class PowerUpPiercingProjectile:
+    import math
+    import random
+
+    class PowerUpExtraBall:
 
         WIDTH = 32
         HEIGHT = 32
@@ -8,12 +11,12 @@ init python:
         FPS = 6
         
         SPRITES = [
-            "images/powerups/power_up_piercing_projectile_00.png",
-            "images/powerups/power_up_piercing_projectile_01.png",
-            "images/powerups/power_up_piercing_projectile_02.png",
-            "images/powerups/power_up_piercing_projectile_03.png",
-            "images/powerups/power_up_piercing_projectile_04.png",
-            "images/powerups/power_up_piercing_projectile_05.png"
+            "images/powerups/powerup_extra_ball_00.png",
+            "images/powerups/powerup_extra_ball_01.png",
+            "images/powerups/powerup_extra_ball_02.png",
+            "images/powerups/powerup_extra_ball_03.png",
+            "images/powerups/powerup_extra_ball_04.png",
+            "images/powerups/powerup_extra_ball_05.png"
         ]
 
         def __init__(self, x, y):
@@ -31,4 +34,10 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.ammo_piercing_projectile += 1
+            angle = random.uniform(-0.785, 0.785)
+            new_dx = math.sin(angle) * 0.707
+            new_dy = -math.cos(angle) * 0.707
+
+            game.balls.append(
+                Ball(game.player_x, PADDLE_Y - 20, new_dx, new_dy, BALL_SPEED_DEFAULT, stuck=False)
+            )

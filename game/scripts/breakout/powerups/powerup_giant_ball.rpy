@@ -8,12 +8,12 @@ init python:
         FPS = 6
         
         SPRITES = [
-            "images/powerups/power_up_giant_ball_00.png",
-            "images/powerups/power_up_giant_ball_01.png",
-            "images/powerups/power_up_giant_ball_02.png",
-            "images/powerups/power_up_giant_ball_03.png",
-            "images/powerups/power_up_giant_ball_04.png",
-            "images/powerups/power_up_giant_ball_05.png"
+            "images/powerups/powerup_giant_ball_00.png",
+            "images/powerups/powerup_giant_ball_01.png",
+            "images/powerups/powerup_giant_ball_02.png",
+            "images/powerups/powerup_giant_ball_03.png",
+            "images/powerups/powerup_giant_ball_04.png",
+            "images/powerups/powerup_giant_ball_05.png"
         ]
 
         def __init__(self, x, y):
@@ -31,4 +31,5 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.timer_giant_ball = 10.0
+            game.balls_manager.timer_giant_ball += 10.0
+            game.balls_manager.timer_fire_ball = 8.0
