@@ -27,13 +27,19 @@ screen game_screen():
         xoffset -350
         yoffset 10
 
-    text "Score: [game.score]":
-        xalign 0.5
-        yalign 0.9
+    text "Time: [game.formatted_time]":
+        xpos 0.5
+        xanchor 0
+        yalign 0
+        xoffset 350
+        yoffset 10
 
-    text "[game.formatted_time]":
-        xalign 0.5
-        yalign 0.95
+    text "Score: [game.score]":
+        xpos 0.5
+        xanchor 0
+        yalign 0
+        xoffset 350
+        yoffset 60
     
     # projeteis
     vbox:
