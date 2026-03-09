@@ -129,13 +129,11 @@ init python:
                 import random
                 
                 self.shake_timer -= delta_time
-                self.shake_intensity *= 0.9 # O tremor vai ficando mais fraco com o tempo
+                self.shake_intensity *= 0.9
                 
-                # Sorteia um desvio aleatório para X e Y
                 offset_x = random.randint(-int(self.shake_intensity), int(self.shake_intensity))
                 offset_y = random.randint(-int(self.shake_intensity), int(self.shake_intensity))
                 
-                # Cria uma "tela vazia" e cola o seu jogo inteiro em cima dela com o desvio!
                 shaken_render = renpy.Render(width, height)
                 shaken_render.blit(r, (offset_x, offset_y))
                 

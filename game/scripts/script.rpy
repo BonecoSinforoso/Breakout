@@ -50,9 +50,9 @@ label play_game:
 
     menu:
         "Would you like to play again?"
-        "Yes.":
+        "Yes":
             jump play_game
-        "No.":
+        "No":
             jump after_game
 
     return
