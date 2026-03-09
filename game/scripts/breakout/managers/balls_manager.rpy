@@ -137,16 +137,14 @@ init python:
                     
                     renpy.sound.play("ball_collision.wav", channel=0)
                     
-                    ball.y = paddle_top - (b_h / 2) - 1
-                    
                     dist_from_center = ball.x - paddle.x
-                    
                     normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
-                    
                     bounce_angle = normalized_dist * 1.047 
                     
-                    ball.dx = math.sin(bounce_angle) * 0.707
-                    ball.dy = -abs(math.cos(bounce_angle) * 0.707)
+                    ball.dx = math.sin(bounce_angle) * 0.5
+                    ball.dy = -abs(math.cos(bounce_angle) * 0.5)
+
+                    ball.hit_cooldown = 0.05
 
                 # Renderiza a bola
                 ball_img = renpy.render(b_image, width, height, st, at)
