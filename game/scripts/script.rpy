@@ -3,6 +3,7 @@
 
 label start:
 
+    $ renpy.music.set_volume(0.05, delay=2.0, channel='music')
     scene bg room
     show eileen happy
 

@@ -55,3 +55,5 @@ screen game_screen():
             spacing 10
             add "images/projectiles/projectile_piercing_00.png" zoom 0.5
             text "X: [game.arsenal.ammo_piercing]" size 30
+
+    add "gui/crt_scanlines.png" alpha 0.3

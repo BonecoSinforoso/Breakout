@@ -4,6 +4,78 @@
 
 init offset = -1
 
+# shake do titulo
+transform title_tremble:
+    matrixanchor (0.5, 0.5)
+    rotate_pad False
+    
+    linear 0.05 xoffset 3 yoffset -2 rotate 1.5
+    linear 0.05 xoffset -2 yoffset 2 rotate -1.0
+    linear 0.05 xoffset 2 yoffset 1 rotate 0.5
+    linear 0.05 xoffset -3 yoffset -1 rotate -1.5
+    linear 0.05 xoffset 0 yoffset 0 rotate 0.0
+    repeat
+
+# fundo colorido animado
+image rgb_animated_bg:
+    Solid("#370000")
+    matrixcolor HueMatrix(0)
+    linear 10.0 matrixcolor HueMatrix(360)
+    repeat
+
+# animacao do menu
+image spinning_yellow_block:
+    "images/blocks/brick/block_brick_yellow_04.png"
+    transform_anchor True
+    rotate 0
+    linear 1.0 rotate 360
+    repeat
+
+image menu_floating_blocks = SnowBlossom(
+    "spinning_yellow_block",
+    count=35,
+    xspeed=(100, 180),
+    yspeed=(100, 180),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_powerups = SnowBlossom(
+    "images/powerups/powerup_basic_projectile_05.png", 
+    count=30, 
+    xspeed=(120, 200),
+    yspeed=(120, 200),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_balls = SnowBlossom(
+    "images/balls/ball_white.png", 
+    count=30, 
+    xspeed=(180, 280),
+    yspeed=(180, 280),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_fireballs = SnowBlossom(
+    "images/balls/ball_fire.png", 
+    count=25, 
+    xspeed=(300, 450),
+    yspeed=(300, 450),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_paddles = SnowBlossom(
+    "images/paddles/paddle_red_04.png", 
+    count=15, 
+    xspeed=(400, 600),
+    yspeed=(400, 600),
+    start=10.0,
+    fast=True
+)
+
 
 ################################################################################
 ## Styles
@@ -27,6 +99,8 @@ style gui_text:
 
 style button:
     properties gui.button_properties("button")
+    hover_sound "audio/hover.flac" # marrom
+    # activate_sound "audio/hover.flac" # ainda nao achei um bom
 
 style button_text is gui_text:
     properties gui.text_properties("button")
@@ -297,7 +371,7 @@ screen navigation():
 
             textbutton _("Start") action Start()
 
-            textbutton _("Leaderboard") action ShowMenu("breakout_leaderboard")
+            textbutton _("Leaderboard") action ShowMenu("leaderboard_screen")
 
         textbutton _("Preferences") action ShowMenu("preferences")
 
@@ -345,7 +419,16 @@ screen main_menu():
     ## This ensures that any other menu screen is replaced.
     tag menu
 
-    add gui.main_menu_background
+    # add gui.main_menu_background
+    add "rgb_animated_bg"
+
+    # animacao
+    add "spinning_yellow_block"
+    add "menu_floating_blocks"
+    add "menu_floating_powerups"
+    add "menu_floating_balls"
+    add "menu_floating_fireballs"
+    add "menu_floating_paddles"
 
     ## This empty frame darkens the main menu.
     frame:
@@ -362,9 +445,12 @@ screen main_menu():
 
             text "[config.name!t]":
                 style "main_menu_title"
+                at title_tremble
 
             text "[config.version]":
                 style "main_menu_version"
+
+    add "gui/crt_scanlines.png" alpha 0.3
 
 
 style main_menu_frame is empty
