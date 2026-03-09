@@ -8,16 +8,20 @@ init python:
         def __init__(self):
             self.particles = []
 
-        def spawn_burst(self, x, y, amount=10, color="#FFFFFF", speed_min=50, speed_max=200):
+        def spawn_burst(self, x, y, amount=10, color=None, speed_min=50, speed_max=200):
+            colors_neon = ["#FF3333", "#33FF33", "#3333FF", "#FFFF33", "#FF33FF", "#00FFFF"]
+
             for _ in range(amount):
                 angle = random.uniform(0, math.pi * 2)
                 speed = random.uniform(speed_min, speed_max)
                 
                 dx = math.cos(angle) * speed
                 dy = math.sin(angle) * speed
-                lifetime = random.uniform(0.2, 0.5) # Dura entre 0.2 e 0.5 segundos
+                lifetime = random.uniform(0.2, 0.5)
                 
-                self.particles.append(Particle(x, y, dx, dy, lifetime, color))
+                p_color = color if color is not None else random.choice(colors_neon)
+                
+                self.particles.append(Particle(x, y, dx, dy, lifetime, p_color))
 
         def update_and_render(self, r, delta_time):
             canvas = r.canvas()

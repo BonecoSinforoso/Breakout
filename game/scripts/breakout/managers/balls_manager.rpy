@@ -122,7 +122,7 @@ init python:
                         if is_fireball:
                             particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#FF3333")
                         elif is_giantball:
-                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#33FF33")
+                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#ffffff")
                         else:
                             particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
                 

@@ -101,7 +101,7 @@ init python:
 
             self.particles_manager.update_and_render(r, delta_time)
 
-            self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self)
+            self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
 
             # derrota/vitoria
             if self.balls_manager.is_empty() and not self.winner:

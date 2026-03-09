@@ -62,7 +62,7 @@ init 1 python:
         def clear(self):
             self.active_powerups.clear()
 
-        def update_and_render(self, r, width, height, st, at, delta_time, paddle, game):
+        def update_and_render(self, r, width, height, st, at, delta_time, paddle, game, particles_manager):
             for pu in self.active_powerups[:]:
                 pu.update(delta_time)
                 pu.render(r, width, height, st, at)
@@ -78,10 +78,9 @@ init 1 python:
                 
                 if (pu_right >= paddle_left and pu_left <= paddle_right and 
                     pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
-                    
                     pu.apply_effect(game)
                     self.active_powerups.remove(pu)
                     renpy.sound.play("powerup_collected.wav", channel=1)
-                
+                    particles_manager.spawn_burst(pu.x, PADDLE_Y, amount=20, speed_min=150, speed_max=400)
                 elif pu.y > 1080:
                     self.active_powerups.remove(pu)
