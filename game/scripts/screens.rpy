@@ -5,6 +5,60 @@
 init offset = -1
 
 
+# animacao do menu
+image spinning_green_block:
+    "images/blocks/brick/block_brick_green_04.png"
+    transform_anchor True
+    rotate 0
+    linear 1.0 rotate 360
+    repeat
+
+image menu_floating_blocks = SnowBlossom(
+    "spinning_green_block",
+    count=20,
+    xspeed=(40, 70),
+    yspeed=(40, 70),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_balls = SnowBlossom(
+    "images/balls/ball_white.png", 
+    count=20, 
+    xspeed=(80, 130),
+    yspeed=(80, 130),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_fireballs = SnowBlossom(
+    "images/balls/ball_fire.png", 
+    count=20, 
+    xspeed=(80, 130),
+    yspeed=(80, 130),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_paddles = SnowBlossom(
+    "images/paddles/paddle_red_04.png", 
+    count=20, 
+    xspeed=(80, 130),
+    yspeed=(80, 130),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_powerups = SnowBlossom(
+    "images/powerups/powerup_basic_projectile_05.png", 
+    count=20, 
+    xspeed=(80, 130),
+    yspeed=(80, 130),
+    start=10.0,
+    fast=True
+)
+
+
 ################################################################################
 ## Styles
 ################################################################################
@@ -346,6 +400,14 @@ screen main_menu():
     tag menu
 
     add gui.main_menu_background
+
+    # animacao
+    add "spinning_green_block"
+    add "menu_floating_blocks"
+    add "menu_floating_balls"
+    add "menu_floating_fireballs"
+    add "menu_floating_paddles"
+    add "menu_floating_powerups"
 
     ## This empty frame darkens the main menu.
     frame:
