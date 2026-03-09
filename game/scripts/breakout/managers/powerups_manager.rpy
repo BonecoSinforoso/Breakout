@@ -9,19 +9,19 @@ init 1 python:
         CATALOG = {
             "increase_size": {
                 "class": PowerUpIncreaseSize, 
-                "active": True
+                "active": False
             },
             "slow_down": {
                 "class": PowerUpSlowDown, 
-                "active": True
+                "active": False
             },
             "extra_ball": {
                 "class": PowerUpExtraBall,
-                "active": True
+                "active": False
             },
             "fire_ball": {
                 "class": PowerUpFireball,
-                "active": True
+                "active": False
             },
             "giant_ball": {
                 "class": PowerUpGiantBall,
@@ -29,11 +29,11 @@ init 1 python:
             },
             "basic_projectile": {
                 "class": PowerUpBasicProjectile,
-                "active": True
+                "active": False
             },
             "piercing_projectile": {
                 "class": PowerUpPiercingProjectile,
-                "active": True
+                "active": False
             }
         }
 

@@ -32,4 +32,4 @@ init python:
 
         def apply_effect(self, game):
             game.balls_manager.timer_giant_ball += 10.0
-            game.balls_manager.timer_fire_ball = 8.0
+            game.balls_manager.timer_fire_ball = 0
