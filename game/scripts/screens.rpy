@@ -18,21 +18,21 @@ transform title_tremble:
 
 # fundo colorido animado
 image rgb_animated_bg:
-    Solid("#802222")
+    Solid("#370000")
     matrixcolor HueMatrix(0)
     linear 10.0 matrixcolor HueMatrix(360)
     repeat
 
 # animacao do menu
-image spinning_green_block:
-    "images/blocks/brick/block_brick_green_04.png"
+image spinning_yellow_block:
+    "images/blocks/brick/block_brick_yellow_04.png"
     transform_anchor True
     rotate 0
     linear 1.0 rotate 360
     repeat
 
 image menu_floating_blocks = SnowBlossom(
-    "spinning_green_block",
+    "spinning_yellow_block",
     count=35,
     xspeed=(100, 180),
     yspeed=(100, 180),
@@ -423,7 +423,7 @@ screen main_menu():
     add "rgb_animated_bg"
 
     # animacao
-    add "spinning_green_block"
+    add "spinning_yellow_block"
     add "menu_floating_blocks"
     add "menu_floating_powerups"
     add "menu_floating_balls"
