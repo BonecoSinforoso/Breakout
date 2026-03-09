@@ -15,45 +15,45 @@ image spinning_green_block:
 
 image menu_floating_blocks = SnowBlossom(
     "spinning_green_block",
-    count=20,
-    xspeed=(40, 70),
-    yspeed=(40, 70),
-    start=10.0,
-    fast=True
-)
-
-image menu_floating_balls = SnowBlossom(
-    "images/balls/ball_white.png", 
-    count=20, 
-    xspeed=(80, 130),
-    yspeed=(80, 130),
-    start=10.0,
-    fast=True
-)
-
-image menu_floating_fireballs = SnowBlossom(
-    "images/balls/ball_fire.png", 
-    count=20, 
-    xspeed=(80, 130),
-    yspeed=(80, 130),
-    start=10.0,
-    fast=True
-)
-
-image menu_floating_paddles = SnowBlossom(
-    "images/paddles/paddle_red_04.png", 
-    count=20, 
-    xspeed=(80, 130),
-    yspeed=(80, 130),
+    count=35,
+    xspeed=(100, 180),
+    yspeed=(100, 180),
     start=10.0,
     fast=True
 )
 
 image menu_floating_powerups = SnowBlossom(
     "images/powerups/powerup_basic_projectile_05.png", 
-    count=20, 
-    xspeed=(80, 130),
-    yspeed=(80, 130),
+    count=30, 
+    xspeed=(120, 200),
+    yspeed=(120, 200),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_balls = SnowBlossom(
+    "images/balls/ball_white.png", 
+    count=30, 
+    xspeed=(180, 280),
+    yspeed=(180, 280),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_fireballs = SnowBlossom(
+    "images/balls/ball_fire.png", 
+    count=25, 
+    xspeed=(300, 450),
+    yspeed=(300, 450),
+    start=10.0,
+    fast=True
+)
+
+image menu_floating_paddles = SnowBlossom(
+    "images/paddles/paddle_red_04.png", 
+    count=15, 
+    xspeed=(400, 600),
+    yspeed=(400, 600),
     start=10.0,
     fast=True
 )
@@ -404,10 +404,10 @@ screen main_menu():
     # animacao
     add "spinning_green_block"
     add "menu_floating_blocks"
+    add "menu_floating_powerups"
     add "menu_floating_balls"
     add "menu_floating_fireballs"
     add "menu_floating_paddles"
-    add "menu_floating_powerups"
 
     ## This empty frame darkens the main menu.
     frame:
