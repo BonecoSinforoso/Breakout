@@ -161,6 +161,29 @@ init python:
                 ball_img = renpy.render(b_image, width, height, st, at)
                 r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
 
+                # trail
+                if not hasattr(ball, 'history'):
+                    ball.history = []                
+                
+                if not ball.stuck:
+                    ball.history.append((ball.x, ball.y))
+                
+                    if len(ball.history) > 6:
+                        ball.history.pop(0)
+                
+                canvas = r.canvas()
+                for i, (hx, hy) in enumerate(ball.history):
+                    t = (i + 1) / float(len(ball.history))
+                    size = int((b_w * 0.6) * t)
+                    
+                    if size > 0:                        
+                        trail_color = "#AAAAAA"
+                        if is_fireball: trail_color = "#FF3333"
+                        elif is_giantball: trail_color = "#33FF33"
+                        
+                        canvas.rect(trail_color, (int(hx - size/2), int(hy - size/2), size, size))
+
+                # destruicao da bola
                 if ball.y > 1080:
                     self.balls.remove(ball)
 
