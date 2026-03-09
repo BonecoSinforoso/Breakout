@@ -21,7 +21,6 @@ init python:
 
             # outros
             self.arsenal = Arsenal()
-            self.debugger = Debugger()
             self.powerups_manager = PowerUpsManager()
             self.particles_manager = ParticlesManager()
             
@@ -154,7 +153,6 @@ init python:
                 self.balls_manager.release_all()
 
             self.arsenal.handle_input(ev, self)
-            self.debugger.handle_input(ev, self)
             
             renpy.restart_interaction()            
 
