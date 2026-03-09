@@ -98,11 +98,15 @@ init python:
                 # Colisao com os Blocos
                 if not hasattr(ball, 'hit_cooldown'):
                     ball.hit_cooldown = 0.0
-                                
+                
                 if ball.hit_cooldown > 0:
                     ball.hit_cooldown -= delta_time
-                
-                if ball.hit_cooldown <= 0 or is_fireball
+
+                score = 0
+                dropped_pups = []
+
+                if ball.hit_cooldown <= 0 or is_fireball or is_giantball:
+                    
                     old_dx = ball.dx
                     old_dy = ball.dy
                     
@@ -110,12 +114,9 @@ init python:
                         ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                     )
 
-                    points_earned += score
-                    new_powerups.extend(dropped_pups)
-
                     if (old_dx != ball.dx or old_dy != ball.dy) and not (is_fireball or is_giantball):
                         ball.hit_cooldown = 0.05
-
+                
                 points_earned += score
                 new_powerups.extend(dropped_pups)
 
