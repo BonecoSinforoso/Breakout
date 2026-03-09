@@ -210,4 +210,4 @@ init python:
 
 
 init offset = -2
-include "breakout_leaderboard.rpy"
+include "leaderboard_screen.rpy"

@@ -1,4 +1,4 @@
-screen breakout_leaderboard():
+screen leaderboard_screen():
     
     tag menu
 
@@ -18,5 +18,3 @@ screen breakout_leaderboard():
                     hbox:
                         text f"#{i+1} " xalign 0.0
                         text f"{name}: {score}" xalign 0.5
-
-            textbutton _("Back") action Return() xalign 0.5

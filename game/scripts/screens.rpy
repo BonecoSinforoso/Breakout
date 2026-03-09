@@ -371,7 +371,7 @@ screen navigation():
 
             textbutton _("Start") action Start()
 
-            textbutton _("Leaderboard") action ShowMenu("breakout_leaderboard")
+            textbutton _("Leaderboard") action ShowMenu("leaderboard_screen")
 
         textbutton _("Preferences") action ShowMenu("preferences")
 
