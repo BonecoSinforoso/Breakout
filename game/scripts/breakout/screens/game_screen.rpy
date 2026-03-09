@@ -1,7 +1,4 @@
-# Define a screen principal do minigame Breakout.
-# Responsavel por montar a cena do jogo: fundo, quadra e
-# a instância do GameDisplayable alem de elementos de
-# sobreposicao como mensagens e HUD futuro
+# define a screen principal do minigame
 screen game_screen():
     
     default game = GameDisplayable()
@@ -14,6 +11,8 @@ screen game_screen():
         xysize (640, 1080)
 
     add game
+
+    use cheat_screen(game)
 
     if game.stuck:
         text "Click to begin":
