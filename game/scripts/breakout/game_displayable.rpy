@@ -15,6 +15,10 @@ init python:
             self.balls_manager = BallsManager()
             self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
             
+            # shake
+            self.shake_timer = 0.0
+            self.shake_intensity = 0.0
+
             # outros
             self.arsenal = Arsenal()
             self.debugger = Debugger()
@@ -48,6 +52,9 @@ init python:
             self.lives -= 1
             self.powerups_manager.clear()
             self.reset_powerup_effects()
+
+            self.shake_timer = 0.4
+            self.shake_intensity = 15.0
 
             if self.lives <= 0:
                 self.winner = "eileen"
@@ -117,6 +124,23 @@ init python:
                 renpy.timeout(0)
 
             renpy.redraw(self, 0)
+
+            if self.shake_timer > 0:
+                import random
+                
+                self.shake_timer -= delta_time
+                self.shake_intensity *= 0.9 # O tremor vai ficando mais fraco com o tempo
+                
+                # Sorteia um desvio aleatório para X e Y
+                offset_x = random.randint(-int(self.shake_intensity), int(self.shake_intensity))
+                offset_y = random.randint(-int(self.shake_intensity), int(self.shake_intensity))
+                
+                # Cria uma "tela vazia" e cola o seu jogo inteiro em cima dela com o desvio!
+                shaken_render = renpy.Render(width, height)
+                shaken_render.blit(r, (offset_x, offset_y))
+                
+                return shaken_render
+
             return r
 
         def event(self, ev, x, y, st):
