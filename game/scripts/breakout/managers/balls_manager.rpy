@@ -96,7 +96,7 @@ init python:
                     if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisao com os Blocos
-                ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
+                ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
                     ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                 )
 

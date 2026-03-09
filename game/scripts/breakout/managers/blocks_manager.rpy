@@ -102,14 +102,24 @@ init python:
                             overlap_y = (ball_h / 2) - abs(dist_y)
 
                             if overlap_x < overlap_y:
-                                ball_dx = -ball_dx
-                            else:
-                                ball_dy = -ball_dy
+                                if dist_x > 0:
+                                    ball_dx = abs(ball_dx)
+                                    ball_x += overlap_x + 1
+                                else:
+                                    ball_dx = -abs(ball_dx)
+                                    ball_x -= overlap_x + 1
+                            else:                                
+                                if dist_y > 0:
+                                    ball_dy = abs(ball_dy)
+                                    ball_y += overlap_y + 1
+                                else:
+                                    ball_dy = -abs(ball_dy)
+                                    ball_y -= overlap_y + 1
 
                     if not is_fireball:
-                        break 
+                        break
 
-            return ball_dx, ball_dy, score, spawned_powerups
+            return ball_x, ball_y, ball_dx, ball_dy, score, spawned_powerups
 
 
         def render(self, r, width, height, st, at):
