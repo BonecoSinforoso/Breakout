@@ -12,3 +12,4 @@ default show_cheats = False
 
 # persistentes
 default persistent.highscores = []
+default persistent.crt_effect = True
