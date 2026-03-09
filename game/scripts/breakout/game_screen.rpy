@@ -15,6 +15,8 @@ screen game_screen():
 
     add game
 
+    use cheat_menu(game)
+
     if game.stuck:
         text "Click to begin":
             xalign 0.5

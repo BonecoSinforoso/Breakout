@@ -122,7 +122,7 @@ init python:
                         if is_fireball:
                             particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#FF3333")
                         elif is_giantball:
-                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#ffffff")
+                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#33FF33")
                         else:
                             particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
                 
@@ -179,7 +179,7 @@ init python:
                     if size > 0:                        
                         trail_color = "#AAAAAA"
                         if is_fireball: trail_color = "#FF3333"
-                        elif is_giantball: trail_color = "#33FF33"
+                        elif is_giantball: trail_color = "#ffffff"
                         
                         canvas.rect(trail_color, (int(hx - size/2), int(hy - size/2), size, size))
 

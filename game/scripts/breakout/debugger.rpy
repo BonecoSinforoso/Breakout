@@ -15,7 +15,7 @@ init python:
                 
                 # W: forca vitoria
                 elif ev.key == pygame.K_w:
-                    for block in game.block_grid.blocks:
+                    for block in game.blocks_manager.blocks:
                         while block.active:
                             destroyed, points = block.hit()
                             game.score += points
