@@ -450,6 +450,8 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
+    add "gui/crt_scanlines.png" alpha 0.3
+
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
