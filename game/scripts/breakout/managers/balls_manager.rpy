@@ -14,8 +14,14 @@ init python:
             self.ball_fire_image = Image("images/balls/ball_fire.png")
             self.ball_giant_image = Image("images/balls/ball_giant.png")
 
-        def spawn_ball(self, x, y, dx, dy, speed, stuck=False):
-            self.balls.append(Ball(x, y, dx, dy, speed, stuck=stuck))
+        def spawn_ball(self, x, y, dx=0, dy=0, stuck=False):
+            import random
+                        
+            if dx == 0 and dy == 0:
+                dx = 0.5 * random.choice([-1, 1])
+                dy = -0.5
+                
+            self.balls.append(Ball(x, y, dx, dy, BALL_SPEED_DEFAULT, stuck=stuck))
 
         def clear(self):
             self.balls.clear()
@@ -40,6 +46,7 @@ init python:
             points_earned = 0
             new_powerups = []
             is_fireball = (self.timer_fire_ball > 0)
+            is_giantball = (self.timer_giant_ball > 0)
 
             for ball in self.balls[:]: 
                 current_ball_speed = ball.speed
@@ -50,7 +57,7 @@ init python:
                 if self.timer_slow_down > 0 and ball.dy > 0:
                     current_ball_speed *= 0.5
                 
-                if self.timer_giant_ball > 0:
+                if is_giantball:
                     current_ball_speed *= 1.5
                     b_image = self.ball_giant_image
                     b_w = 32
@@ -89,10 +96,27 @@ init python:
                     if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisao com os Blocos
-                ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
-                    ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball
-                )
+                if not hasattr(ball, 'hit_cooldown'):
+                    ball.hit_cooldown = 0.0
+                
+                if ball.hit_cooldown > 0:
+                    ball.hit_cooldown -= delta_time
 
+                score = 0
+                dropped_pups = []
+
+                if ball.hit_cooldown <= 0 or is_fireball or is_giantball:
+                    
+                    old_dx = ball.dx
+                    old_dy = ball.dy
+                    
+                    ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
+                        ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
+                    )
+
+                    if (old_dx != ball.dx or old_dy != ball.dy) and not (is_fireball or is_giantball):
+                        ball.hit_cooldown = 0.05
+                
                 points_earned += score
                 new_powerups.extend(dropped_pups)
 
@@ -107,21 +131,20 @@ init python:
                 ball_top = ball.y - b_h / 2
                 ball_bottom = ball.y + b_h / 2
 
-                if (ball_right >= paddle_left and ball_left <= paddle_right and 
+                if (ball.dy > 0 and 
+                    ball_right >= paddle_left and ball_left <= paddle_right and 
                     ball_bottom >= paddle_top and ball_top <= paddle_bottom):
                     
                     renpy.sound.play("ball_collision.wav", channel=0)
                     
-                    ball.y = paddle_top - (b_h / 2) - 1
-                    
                     dist_from_center = ball.x - paddle.x
-                    
                     normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
-                    
                     bounce_angle = normalized_dist * 1.047 
                     
                     ball.dx = math.sin(bounce_angle) * 0.707
                     ball.dy = -abs(math.cos(bounce_angle) * 0.707)
+
+                    ball.hit_cooldown = 0.05
 
                 # Renderiza a bola
                 ball_img = renpy.render(b_image, width, height, st, at)

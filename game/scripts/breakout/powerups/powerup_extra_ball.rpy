@@ -38,6 +38,10 @@ init python:
             new_dx = math.sin(angle) * 0.707
             new_dy = -math.cos(angle) * 0.707
 
-            game.balls.append(
-                Ball(game.player_x, PADDLE_Y - 20, new_dx, new_dy, BALL_SPEED_DEFAULT, stuck=False)
+            game.balls_manager.spawn_ball(
+                game.paddle.x, 
+                PADDLE_Y - 20, 
+                new_dx, 
+                new_dy,
+                stuck=False
             )

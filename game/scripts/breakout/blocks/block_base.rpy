@@ -8,7 +8,7 @@ init python:
         
         POINTS_HIT = 1
         POINTS_DESTROY = 5
-        DROP_CHANCE = 0.1
+        DROP_CHANCE = 1 # para obrigar a balancear novo bloco
 
         BLOCK_FPS = 8
         ANIM_DELAY = 3.0

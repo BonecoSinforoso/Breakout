@@ -8,7 +8,7 @@ init python:
 
         POINTS_HIT = 10
         POINTS_DESTROY = 20
-        DROP_CHANCE = 1
+        DROP_CHANCE = 0.4
 
         COLORS = [
             "blue", "brown", "cyan", "gray", "green", "orange", "pink", "red", "shocking", "yellow",

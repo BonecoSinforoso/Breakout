@@ -13,27 +13,27 @@ init 1 python:
             },
             "slow_down": {
                 "class": PowerUpSlowDown, 
-                "active": False
+                "active": True
             },
             "extra_ball": {
                 "class": PowerUpExtraBall,
-                "active": False
+                "active": True
             },
             "fire_ball": {
                 "class": PowerUpFireball,
-                "active": False
+                "active": True
             },
             "giant_ball": {
                 "class": PowerUpGiantBall,
-                "active": False
+                "active": True
             },
             "basic_projectile": {
                 "class": PowerUpBasicProjectile,
-                "active": False
+                "active": True
             },
             "piercing_projectile": {
                 "class": PowerUpPiercingProjectile,
-                "active": False
+                "active": True
             }
         }
 
