@@ -18,9 +18,9 @@ transform title_tremble:
 
 # fundo colorido animado
 image rgb_animated_bg:
-    Solid("#330066")
+    Solid("#802222")
     matrixcolor HueMatrix(0)
-    linear 5.0 matrixcolor HueMatrix(360)
+    linear 10.0 matrixcolor HueMatrix(360)
     repeat
 
 # animacao do menu
@@ -99,6 +99,8 @@ style gui_text:
 
 style button:
     properties gui.button_properties("button")
+    hover_sound "audio/hover.flac" # marrom
+    # activate_sound "audio/hover.flac" # ainda nao achei um bom
 
 style button_text is gui_text:
     properties gui.text_properties("button")
