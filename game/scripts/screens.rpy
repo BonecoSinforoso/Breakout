@@ -4,6 +4,24 @@
 
 init offset = -1
 
+# shake do titulo
+transform title_tremble:
+    matrixanchor (0.5, 0.5)
+    rotate_pad False
+    
+    linear 0.05 xoffset 3 yoffset -2 rotate 1.5
+    linear 0.05 xoffset -2 yoffset 2 rotate -1.0
+    linear 0.05 xoffset 2 yoffset 1 rotate 0.5
+    linear 0.05 xoffset -3 yoffset -1 rotate -1.5
+    linear 0.05 xoffset 0 yoffset 0 rotate 0.0
+    repeat
+
+# fundo colorido animado
+image rgb_animated_bg:
+    Solid("#330066")
+    matrixcolor HueMatrix(0)
+    linear 5.0 matrixcolor HueMatrix(360)
+    repeat
 
 # animacao do menu
 image spinning_green_block:
@@ -399,7 +417,8 @@ screen main_menu():
     ## This ensures that any other menu screen is replaced.
     tag menu
 
-    add gui.main_menu_background
+    # add gui.main_menu_background
+    add "rgb_animated_bg"
 
     # animacao
     add "spinning_green_block"
@@ -424,6 +443,7 @@ screen main_menu():
 
             text "[config.name!t]":
                 style "main_menu_title"
+                at title_tremble
 
             text "[config.version]":
                 style "main_menu_version"
