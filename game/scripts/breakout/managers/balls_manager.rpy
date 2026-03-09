@@ -96,9 +96,25 @@ init python:
                     if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
 
                 # Colisao com os Blocos
-                ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
-                    ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
-                )
+                if not hasattr(ball, 'hit_cooldown'):
+                    ball.hit_cooldown = 0.0
+                                
+                if ball.hit_cooldown > 0:
+                    ball.hit_cooldown -= delta_time
+                
+                if ball.hit_cooldown <= 0 or is_fireball
+                    old_dx = ball.dx
+                    old_dy = ball.dy
+                    
+                    ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
+                        ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
+                    )
+
+                    points_earned += score
+                    new_powerups.extend(dropped_pups)
+
+                    if (old_dx != ball.dx or old_dy != ball.dy) and not (is_fireball or is_giantball):
+                        ball.hit_cooldown = 0.05
 
                 points_earned += score
                 new_powerups.extend(dropped_pups)
