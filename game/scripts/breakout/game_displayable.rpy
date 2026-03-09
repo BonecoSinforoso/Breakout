@@ -19,6 +19,7 @@ init python:
             self.arsenal = Arsenal()
             self.debugger = Debugger()
             self.powerups_manager = PowerUpsManager()
+            self.particles_manager = ParticlesManager()
             
             self.projectiles = []
 
@@ -31,7 +32,7 @@ init python:
             self.old_st = None
             self.winner = None
 
-            self.block_grid = BlocksManager(COURT_LEFT, COURT_TOP)
+            self.blocks_manager = BlocksManager(COURT_LEFT, COURT_TOP)
         
         @property
         def formatted_time(self):
@@ -40,7 +41,7 @@ init python:
             return "{:02d}:{:02d}".format(minutes, seconds)
 
         def visit(self):
-            block_frames = self.block_grid.get_all_frames()
+            block_frames = self.blocks_manager.get_all_frames()
             return [self.paddle.image, self.balls_manager.ball_default_image, self.balls_manager.ball_fire_image, self.balls_manager.ball_giant_image] + block_frames
 
         def _lose_life(self):
@@ -76,21 +77,22 @@ init python:
 
             self.paddle.update(delta_time)
 
-            projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.block_grid)
+            projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.blocks_manager)
             self.score += projectile_points
 
             # raquete
             self.paddle.render(r, width, height, st, at)
 
-            points_earned, new_powerups = self.balls_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self.block_grid)
+            points_earned, new_powerups = self.balls_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self.blocks_manager, self.particles_manager)
             
             self.score += points_earned
             store.player_score = self.score
 
             self.powerups_manager.add(new_powerups)
 
-            # Render dos Blocos
-            self.block_grid.render(r, width, height, st, at)
+            self.blocks_manager.render(r, width, height, st, at)
+
+            self.particles_manager.update_and_render(r, delta_time)
 
             self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self)
 
@@ -99,7 +101,7 @@ init python:
                 renpy.sound.play("result_lose.mp3", channel=0)
                 self._lose_life()
                 renpy.timeout(0)
-            elif self.block_grid.all_destroyed() and not self.winner:
+            elif self.blocks_manager.all_destroyed() and not self.winner:
                 renpy.sound.play("result_win.mp3", channel=0)
                 self.winner = "player"
 

@@ -1,4 +1,3 @@
-# Gerencia o grid de blocos. Os tipos de bloco ficam em seus proprios arquivos.
 init python:
 
     import random

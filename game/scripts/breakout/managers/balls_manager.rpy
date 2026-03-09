@@ -38,7 +38,7 @@ init python:
             self.timer_fire_ball = 0.0
             self.timer_giant_ball = 0.0
 
-        def update_and_render(self, r, width, height, st, at, delta_time, paddle, block_grid):
+        def update_and_render(self, r, width, height, st, at, delta_time, paddle, blocks_manager, particles_manager):
             if self.timer_slow_down > 0: self.timer_slow_down = max(0, self.timer_slow_down - delta_time)
             if self.timer_fire_ball > 0: self.timer_fire_ball = max(0, self.timer_fire_ball - delta_time)
             if self.timer_giant_ball > 0: self.timer_giant_ball = max(0, self.timer_giant_ball - delta_time)
@@ -110,12 +110,13 @@ init python:
                     old_dx = ball.dx
                     old_dy = ball.dy
                     
-                    ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
+                    ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = blocks_manager.check_collision(
                         ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                     )
 
                     if (old_dx != ball.dx or old_dy != ball.dy) and not (is_fireball or is_giantball):
                         ball.hit_cooldown = 0.05
+                        particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
                 
                 points_earned += score
                 new_powerups.extend(dropped_pups)
@@ -145,6 +146,8 @@ init python:
                     ball.dy = -abs(math.cos(bounce_angle) * 0.707)
 
                     ball.hit_cooldown = 0.05
+
+                    particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
 
                 # Renderiza a bola
                 ball_img = renpy.render(b_image, width, height, st, at)

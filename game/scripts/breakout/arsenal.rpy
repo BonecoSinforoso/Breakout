@@ -13,7 +13,7 @@ init python:
             
             self.projectiles = []
 
-        def update_and_render(self, r, width, height, st, at, delta_time, block_grid):
+        def update_and_render(self, r, width, height, st, at, delta_time, blocks_manager):
             if self.cd_basic > 0: self.cd_basic -= delta_time
             if self.cd_piercing > 0: self.cd_piercing -= delta_time
 
@@ -34,7 +34,7 @@ init python:
 
                 hit_something = False
 
-                for block in block_grid.blocks:
+                for block in blocks_manager.blocks:
                     if not block.active: continue
                     
                     b_left, b_top = block.x, block.y
