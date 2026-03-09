@@ -141,8 +141,8 @@ init python:
                     normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
                     bounce_angle = normalized_dist * 1.047 
                     
-                    ball.dx = math.sin(bounce_angle) * 0.5
-                    ball.dy = -abs(math.cos(bounce_angle) * 0.5)
+                    ball.dx = math.sin(bounce_angle) * 0.707
+                    ball.dy = -abs(math.cos(bounce_angle) * 0.707)
 
                     ball.hit_cooldown = 0.05
 
