@@ -43,16 +43,16 @@ label play_game:
         "[player_name] you scored [player_score] points"
     else:
         "You win! Congratulations!"
-        "Block: [player_score - bonus_time - bonus_lives] points!"
+        "Destroyed Blocks: [player_score - bonus_time - bonus_lives] points!"
         "Time Bonus: [bonus_time] points!"
         "Lives Bonus: [bonus_lives] points!"
         "[player_name] you scored a total of [player_score] points!"
 
     menu:
         "Would you like to play again?"
-        "Yes.":
+        "Yes":
             jump play_game
-        "No.":
+        "No":
             jump after_game
 
     return
