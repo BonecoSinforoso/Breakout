@@ -6,9 +6,9 @@ screen game_screen():
     
     default game = GameDisplayable()
 
-    add "#090070"
+    add "#000000"
 
-    add Solid("#d3e2ff"):
+    add Solid("#2e2e2e"):
         xalign 0.5
         yalign 0.5
         xysize (640, 1080)

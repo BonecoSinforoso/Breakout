@@ -105,7 +105,7 @@ init python:
                 score = 0
                 dropped_pups = []
 
-                if ball.hit_cooldown <= 0 or is_fireball or is_giantball:
+                if ball.hit_cooldown <= 0 or is_fireball:
                     
                     old_dx = ball.dx
                     old_dy = ball.dy
@@ -113,10 +113,18 @@ init python:
                     ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = blocks_manager.check_collision(
                         ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                     )
-
-                    if (old_dx != ball.dx or old_dy != ball.dy) and not (is_fireball or is_giantball):
+                    
+                    if (old_dx != ball.dx or old_dy != ball.dy) and not is_fireball:
                         ball.hit_cooldown = 0.05
-                        particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
+                    
+                    if (old_dx != ball.dx or old_dy != ball.dy) or score > 0:
+                        
+                        if is_fireball:
+                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#FF3333")
+                        elif is_giantball:
+                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#33FF33")
+                        else:
+                            particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
                 
                 points_earned += score
                 new_powerups.extend(dropped_pups)
