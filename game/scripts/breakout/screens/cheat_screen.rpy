@@ -26,6 +26,11 @@ screen cheat_screen(game):
                     action Function(force_lose, game)
                     text_size 20
                     text_hover_color "#FF3333"
+                
+                textbutton "+1000 Pontos":
+                    action Function(add_1000_points, game)
+                    text_size 20
+                    text_hover_color "#33CCFF"
 
                 null height 10
                 text "--- POWER-UPS ---" color "#33FF33" size 20 bold True

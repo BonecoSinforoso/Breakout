@@ -14,3 +14,7 @@ init python:
     def force_lose(game):
         game.lives = 0
         game.balls_manager.clear()
+
+    def add_1000_points(game):
+        game.score += 1000
+        store.player_score = game.score
