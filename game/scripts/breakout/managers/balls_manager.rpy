@@ -18,8 +18,8 @@ init python:
             import random
                         
             if dx == 0 and dy == 0:
-                dx = 0.707 * random.choice([-1, 1])
-                dy = -0.707
+                dx = 0.5 * random.choice([-1, 1])
+                dy = -0.5
                 
             self.balls.append(Ball(x, y, dx, dy, BALL_SPEED_DEFAULT, stuck=stuck))
 
