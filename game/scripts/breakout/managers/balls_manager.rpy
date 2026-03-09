@@ -57,7 +57,7 @@ init python:
                 if self.timer_slow_down > 0 and ball.dy > 0:
                     current_ball_speed *= 0.5
                 
-                if self.timer_giant_ball > 0:
+                if is_giantball:
                     current_ball_speed *= 1.5
                     b_image = self.ball_giant_image
                     b_w = 32
@@ -97,7 +97,7 @@ init python:
 
                 # Colisao com os Blocos
                 ball.dx, ball.dy, score, dropped_pups = block_grid.check_collision(
-                    ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball
+                    ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                 )
 
                 points_earned += score

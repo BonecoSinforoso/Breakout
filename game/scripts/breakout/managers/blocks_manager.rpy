@@ -60,7 +60,7 @@ init python:
 
             return result
 
-        def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy, is_fireball=False):
+        def check_collision(self, ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy, is_fireball=False, is_giantball=False):
             score = 0
             hit_occurred = False
             spawned_powerups = [] 
@@ -80,7 +80,7 @@ init python:
 
                 if (dist_x ** 2 + dist_y ** 2) <= (ball_w / 2) ** 2:
                     
-                    damage = 100 if is_fireball else 1
+                    damage = 100 if is_fireball or is_giantball else 1
                     
                     while damage > 0 and block.active:
                         destroyed, points = block.hit()
