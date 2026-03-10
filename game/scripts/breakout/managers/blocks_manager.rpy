@@ -51,7 +51,7 @@ init python:
         def reset(self):
             self.blocks = []
             y = self.court_top + self.BLOCK_OFFSET_Y
-            level_map = self.LEVEL_MAPS[self.current_level] # Pega o mapa atual
+            level_map = self.LEVEL_MAPS[self.current_level]
 
             for row in range(self.BLOCK_ROWS):
                 block_class, color, hex_color = level_map[row % len(level_map)]
