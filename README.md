@@ -18,18 +18,18 @@ O projeto expande as mecânicas tradicionais de rebatida com física customizada
 * **Hall da Fama:** Leaderboard completo salvando os Top 10 Highscores globais (com pódio em Ouro, Prata e Bronze).
 
 ## 🧑‍🤝‍🧑 Personagens
-* **Boneco:** Sinforoso (Sinfas, Kinho)
+* Boneco Sinforoso, AKA Sinfas, Kinho ou Ícaro Carvalho.
 
 ## ⌨️ Controles Padrão
-* **Movimento:** Mouse / Setas Direcionais
-* **Lançar Bola:** Botão Esquerdo do Mouse / Espaço
+* **Movimento:** Mouse
+* **Lançar Bola:** Botão Esquerdo do Mouse
 * **Tiro Básico:** Tecla `Z`
 * **Tiro Perfurante:** Tecla `X`
 * **Pausar/Menu:** `Esc`
 
 ## 🏆 Créditos e Agradecimentos
-* **Desenvolvimento e Programação:** [Seu Nome/Nick aqui]
+* **Desenvolvimento e Programação:** [Boneco Sinforoso]
 * **Testes de Qualidade (QA):** Rodrigo Anunciação
 
 ---
-*Feito com dedicação e muito código Python/Ren'Py!*
+*Me diverti muito produzindo!*
