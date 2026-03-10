@@ -1,4 +1,5 @@
 # maestro do jogo
+# TODO: ficou imenso de novo (refatorar)
 init python:
 
     import math
