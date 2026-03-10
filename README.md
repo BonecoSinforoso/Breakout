@@ -28,8 +28,8 @@ O projeto expande as mecânicas tradicionais de rebatida com física customizada
 * **Pausar/Menu:** `Esc`
 
 ## 🏆 Créditos e Agradecimentos
-* **Desenvolvimento e Programação:** [Boneco Sinforoso]
-* **Testes de Qualidade (QA):** Rodrigo Anunciação
+* **Desenvolvimento e Programação:** Boneco Sinforoso
+* **Testes de Qualidade (QA):** [Rodrigo Anunciação](https://github.com/rodrigoadj)
 
 ---
 *Me diverti muito produzindo!*
