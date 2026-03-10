@@ -1087,6 +1087,18 @@ screen help():
 screen keyboard_help():
 
     hbox:
+        label "Z"
+        text "Shoots basic ammo."
+
+    hbox:
+        label "X"
+        text "Shoots piercing ammo."
+
+    hbox:
+        label "Esc"
+        text "Opens the pause menu."
+
+    hbox:
         label _("Enter")
         text _("Advances dialogue and activates the interface.")
 
@@ -1136,6 +1148,14 @@ screen keyboard_help():
 
 
 screen mouse_help():
+
+    hbox:
+        label "Mouse Movement"
+        text "Moves the paddle across the court."
+
+    hbox:
+        label "Left Button"
+        text "Launches the ball stuck to the paddle."
 
     hbox:
         label _("Left Click")
