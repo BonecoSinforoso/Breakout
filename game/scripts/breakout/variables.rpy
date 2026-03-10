@@ -13,3 +13,7 @@ default show_cheats = False
 # persistentes
 default persistent.highscores = []
 default persistent.crt_effect = True
+
+# outros
+default current_level = 1
+default hovered_level = 0

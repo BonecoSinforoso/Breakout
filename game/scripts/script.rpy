@@ -4,10 +4,12 @@
 label start:
 
     $ renpy.music.set_volume(0.05, delay=2.0, channel='music')
+
     scene bg room
+    
     show eileen happy
 
-    jump ask_name    
+    jump ask_name
 
     return
 
@@ -20,7 +22,14 @@ label ask_name:
     if player_name == "":
         jump ask_name
     else:
-        jump play_game
+        jump choose_level
+
+
+label choose_level:
+
+    call screen level_selector
+    
+    jump play_game
 
 
 label play_game:
@@ -52,7 +61,7 @@ label play_game:
     menu:
         "Would you like to play again?"
         "Yes":
-            jump play_game
+            jump choose_level
         "No":
             jump after_game
 
