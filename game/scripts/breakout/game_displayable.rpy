@@ -35,7 +35,7 @@ init python:
             self.old_st = None
             self.winner = None
 
-            self.blocks_manager = BlocksManager(COURT_LEFT, COURT_TOP)
+            self.blocks_manager = BlocksManager(COURT_LEFT, COURT_TOP, store.current_level)
         
         @property
         def formatted_time(self):

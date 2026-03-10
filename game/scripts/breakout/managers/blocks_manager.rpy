@@ -1,3 +1,4 @@
+# TODO: separar fabric do manager
 init python:
 
     import random
@@ -9,32 +10,49 @@ init python:
         BLOCK_PADDING = 2
         BLOCK_OFFSET_Y = 2
 
-        # Mapa: linha -> classe do bloco
-        # Altere aqui para mudar quais tipos aparecem em cada linha
-        ROW_BLOCK_TYPES = {
-            0: (BlockBrick, "blue"),
-            1: (BlockTriple, "gray"),
-            2: (BlockDouble, "brown"),
-            3: (BlockBig, "red"),
-            4: (BlockSmall, "yellow")
+        LEVEL_MAPS = {
+            1: {
+                0: (BlockBrick, "blue", "#2A52BE"),
+                1: (BlockTriple, "gray", "#808080"),
+                2: (BlockDouble, "brown", "#8B4513"),
+                3: (BlockBig, "red", "#FF0000"),
+                4: (BlockSmall, "yellow", "#FFD700")
+            },
+            2: {
+                0: (BlockTriple, "gray", "#808080"),
+                1: (BlockBrick, "blue", "#2A52BE"),
+                2: (BlockDouble, "brown", "#8B4513"),
+                3: (BlockBig, "red", "#FF0000"),
+                4: (BlockTriple, "gray", "#808080")
+            },
+            3: {
+                0: (BlockSmall, "red", "#FF0000"),
+                1: (BlockSmall, "yellow", "#FFD700"),
+                2: (BlockSmall, "blue", "#2A52BE"),
+                3: (BlockSmall, "gray", "#808080"),
+                4: (BlockSmall, "brown", "#8B4513")
+            }
         }
 
-        def __init__(self, court_left, court_top):
+        def __init__(self, court_left, court_top, level=1):
             self.court_left = court_left
             self.court_top  = court_top
+            self.current_level = level
             self.blocks = []
             self.reset()
 
         def _make_block(self, row, col, x, y):
-            block_class, color = self.ROW_BLOCK_TYPES[row % len(self.ROW_BLOCK_TYPES)]
+            map_do_nivel = self.LEVEL_MAPS[self.current_level]
+            block_class, color, hex_color = map_do_nivel[row % len(map_do_nivel)]
             return block_class(x, y, color)
 
         def reset(self):
             self.blocks = []
             y = self.court_top + self.BLOCK_OFFSET_Y
+            map_do_nivel = self.LEVEL_MAPS[self.current_level] # Pega o mapa atual
 
             for row in range(self.BLOCK_ROWS):
-                block_class, color = self.ROW_BLOCK_TYPES[row % len(self.ROW_BLOCK_TYPES)]
+                block_class, color, hex_color = map_do_nivel[row % len(map_do_nivel)]
                 bw = block_class.WIDTH
                 bh = block_class.HEIGHT
 
@@ -45,8 +63,8 @@ init python:
                     x = start_x + col * (bw + self.BLOCK_PADDING)
                     self.blocks.append(block_class(x, y, color))
 
-                y += bh + self.BLOCK_PADDING  # avança pelo bh REAL da linha atual
-
+                y += bh + self.BLOCK_PADDING
+                
         def all_destroyed(self):
             return all(not b.active for b in self.blocks)
 
