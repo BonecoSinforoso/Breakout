@@ -820,11 +820,11 @@ screen preferences():
                         textbutton _("Window") action Preference("display", "window")
                         textbutton _("Fullscreen") action Preference("display", "fullscreen")
 
-                    vbox:
-                        style_prefix "radio"
-                        label _("Retro CRT Filter")
-                        textbutton _("On") action SetField(persistent, 'crt_effect', True)
-                        textbutton _("Off") action SetField(persistent, 'crt_effect', False)
+                vbox:
+                    style_prefix "radio"
+                    label _("CRT Filter")
+                    textbutton _("On") action SetField(persistent, 'crt_effect', True)
+                    textbutton _("Off") action SetField(persistent, 'crt_effect', False)
 
                 vbox:
                     style_prefix "check"
@@ -1693,12 +1693,3 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
-
-init python:
-    config.always_shown_screens.append("crt_global_overlay")
-
-screen crt_global_overlay():
-    zorder 1000
-    
-    if persistent.crt_effect:
-        add "gui/crt_scanlines.png" alpha 0.3
