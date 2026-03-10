@@ -1,4 +1,6 @@
 # TODO: separar fabric do manager
+# TODO: blocos com diferente numero de spawn por linha
+# TODO: contagem automatica de linhas/colunas (baseado no foi colocado no level_maps)
 init python:
 
     import random
@@ -42,17 +44,17 @@ init python:
             self.reset()
 
         def _make_block(self, row, col, x, y):
-            map_do_nivel = self.LEVEL_MAPS[self.current_level]
-            block_class, color, hex_color = map_do_nivel[row % len(map_do_nivel)]
+            level_map = self.LEVEL_MAPS[self.current_level]
+            block_class, color, hex_color = level_map[row % len(level_map)]
             return block_class(x, y, color)
 
         def reset(self):
             self.blocks = []
             y = self.court_top + self.BLOCK_OFFSET_Y
-            map_do_nivel = self.LEVEL_MAPS[self.current_level] # Pega o mapa atual
+            level_map = self.LEVEL_MAPS[self.current_level] # Pega o mapa atual
 
             for row in range(self.BLOCK_ROWS):
-                block_class, color, hex_color = map_do_nivel[row % len(map_do_nivel)]
+                block_class, color, hex_color = level_map[row % len(level_map)]
                 bw = block_class.WIDTH
                 bh = block_class.HEIGHT
 
