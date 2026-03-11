@@ -14,6 +14,10 @@ init python:
             self.ball_fire_image = Image("images/balls/ball_fire.png")
             self.ball_giant_image = Image("images/balls/ball_giant.png")
 
+            self.trail_default = Solid("#AAAAAA")
+            self.trail_fire = Solid("#FF3333")
+            self.trail_giant = Solid("#ffffff")
+
         def spawn_ball(self, x, y, dx=0, dy=0, stuck=False):
             import random
                         
@@ -83,7 +87,6 @@ init python:
                         ball_left = COURT_LEFT + b_w / 2
                         ball_right = COURT_RIGHT - b_w / 2
 
-                        # Colisao com o Teto e Paredes
                         if ball.y < ball_top:
                             ball.y = ball_top + (ball_top - ball.y)
                             ball.dy = -ball.dy
@@ -99,7 +102,6 @@ init python:
                             ball.dx = -ball.dx
                             renpy.sound.play("ball_collision.wav", channel=0)
 
-                        # Colisao com os Blocos (Cooldown Removido!)
                         old_dx = ball.dx
                         old_dy = ball.dy
                         
@@ -115,20 +117,19 @@ init python:
                         points_earned += score
                         new_powerups.extend(dropped_pups)
 
-                        # Colisao com a Raquete
                         paddle_left = paddle.x - paddle.width / 2
                         paddle_right = paddle.x + paddle.width / 2
                         paddle_top = PADDLE_Y - paddle.height / 2
                         paddle_bottom = PADDLE_Y + paddle.height / 2
 
-                        ball_left = ball.x - b_w / 2
-                        ball_right = ball.x + b_w / 2
+                        ball_left_b = ball.x - b_w / 2
+                        ball_right_b = ball.x + b_w / 2
                         ball_top_b = ball.y - b_h / 2
-                        ball_bottom = ball.y + b_h / 2
+                        ball_bottom_b = ball.y + b_h / 2
 
                         if (ball.dy > 0 and 
-                            ball_right >= paddle_left and ball_left <= paddle_right and 
-                            ball_bottom >= paddle_top and ball_top_b <= paddle_bottom):
+                            ball_right_b >= paddle_left and ball_left_b <= paddle_right and 
+                            ball_bottom_b >= paddle_top and ball_top_b <= paddle_bottom):
                             
                             renpy.sound.play("ball_collision.wav", channel=0)
                             
@@ -139,18 +140,13 @@ init python:
                             ball.dx = math.sin(bounce_angle) * 0.707
                             ball.dy = -abs(math.cos(bounce_angle) * 0.707)
 
-                            # garante que a bola nunca grude dentro da raquete!
                             ball.y = paddle_top - b_h / 2
                             
                             particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
-                        
+
                         if ball.y > 1080:
                             break
-                
-                ball_img = renpy.render(b_image, width, height, st, at)
-                r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
 
-                # trail
                 if not hasattr(ball, 'history'):
                     ball.history = []                
                 
@@ -158,19 +154,22 @@ init python:
                     ball.history.append((ball.x, ball.y))
                     if len(ball.history) > 6:
                         ball.history.pop(0)
-                
-                canvas = r.canvas()
+
+                trail_solid = self.trail_default
+                if is_fireball: trail_solid = self.trail_fire
+                elif is_giantball: trail_solid = self.trail_giant
+
                 for i, (hx, hy) in enumerate(ball.history):
                     t = (i + 1) / float(len(ball.history))
                     size = int((b_w * 0.6) * t)
                     
-                    if size > 0:                        
-                        trail_color = "#AAAAAA"
-                        if is_fireball: trail_color = "#FF3333"
-                        elif is_giantball: trail_color = "#ffffff"
-                        
-                        canvas.rect(trail_color, (int(hx - size/2), int(hy - size/2), size, size))
+                    if size > 0:
+                        trail_rend = renpy.render(trail_solid, size, size, st, at)
+                        r.blit(trail_rend, (int(hx - size/2), int(hy - size/2)))
                 
+                ball_img = renpy.render(b_image, width, height, st, at)
+                r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
+
                 if ball.y > 1080:
                     self.balls.remove(ball)
 
