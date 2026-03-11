@@ -1,6 +1,6 @@
 init python:
 
-    class BlockBrick(BlockBase):
+    class BlockBrick(Block):
         
         WIDTH = 64
         HEIGHT = 32

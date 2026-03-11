@@ -1,6 +1,6 @@
 init python:
 
-    class BlockDouble(BlockBase):
+    class BlockDouble(Block):
         
         WIDTH = 32
         HEIGHT = 16
