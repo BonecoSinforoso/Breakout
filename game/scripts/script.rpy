@@ -1,5 +1,5 @@
 ﻿# TODO: mudar aparencia da Eileen, colocar uma sprite minha
-# vai conter as labels
+# vai conter as labels e vozes
 
 label start:
 
@@ -16,6 +16,7 @@ label start:
 
 label ask_name:
 
+    voice "audio/voices/sinfas/what_is_your_name.ogg"
     $ player_name = renpy.input("What is your name?", length = 20)
     $ player_name = player_name.strip()
         
@@ -27,7 +28,7 @@ label ask_name:
 
 label choose_level:
 
-    call screen level_selector
+    call screen level_selector_screen
     
     jump play_game
 
@@ -49,17 +50,24 @@ label play_game:
     $ persistent.highscores = highscores[:10]
 
     if _return == "eileen":
-        "You lose."
+        voice "audio/voices/sinfas/you_lose.ogg"            
+        eileen "You lose."
+        
         "[player_name] you scored [player_score] points"
     else:
-        "You win! Congratulations!"
+        voice "audio/voices/sinfas/you_win_congratulations.ogg"
+        eileen "You win! Congratulations!"
+        
         "Destroyed Blocks: [player_score - bonus_time - bonus_lives] points!"
         "Time Bonus: [bonus_time] points!"
         "Lives Bonus: [bonus_lives] points!"
         "[player_name] you scored a total of [player_score] points!"
 
-    menu:
-        "Would you like to play again?"
+        
+    voice "audio/voices/sinfas/would_you_like_to_play_again.ogg" # temq ser aq do contrario nn vai
+    eileen "Would you like to play again?"
+
+    menu:        
         "Yes":
             jump choose_level
         "No":
@@ -70,6 +78,7 @@ label play_game:
 
 label after_game:
 
+    voice "audio/voices/sinfas/thanks_for_playing.ogg"
     eileen "Thanks for playing! I hope you had fun!"
 
     return
