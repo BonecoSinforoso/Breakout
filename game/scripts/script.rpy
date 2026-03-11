@@ -5,11 +5,13 @@ label start:
 
     $ renpy.music.set_volume(0.05, delay=2.0, channel='music')
 
-    scene bg room
+    scene nigh
     
     show eileen happy
 
     jump ask_name
+
+    hide eileen happy
 
     return
 
@@ -50,11 +52,16 @@ label play_game:
     $ persistent.highscores = highscores[:10]
 
     if _return == "eileen":
+        show eileen concerned
         voice "audio/voices/sinfas/you_lose.ogg"            
         eileen "You lose."
         
         "[player_name] you scored [player_score] points"
+
+        hide eileen concerned
     else:
+        show eileen vhappy
+
         voice "audio/voices/sinfas/you_win_congratulations.ogg"
         eileen "You win! Congratulations!"
         
@@ -63,7 +70,9 @@ label play_game:
         "Lives Bonus: [bonus_lives] points!"
         "[player_name] you scored a total of [player_score] points!"
 
-        
+        hide eileen vhappy
+
+    show eileen happy
     voice "audio/voices/sinfas/would_you_like_to_play_again.ogg" # temq ser aq do contrario nn vai
     eileen "Would you like to play again?"
 
