@@ -32,4 +32,4 @@ init python:
             r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
-            game.paddle.upgrade_size(10.0)
+            game.paddle.increase_size(10.0)

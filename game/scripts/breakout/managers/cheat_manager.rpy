@@ -1,6 +1,6 @@
 init python:
 
-    def spawn_cheat_pu(game, pu_class):
+    def spawn_powerup(game, pu_class):
         new_pu = pu_class(game.paddle.x, PADDLE_Y - 150)
         game.powerups_manager.add([new_pu])
 
@@ -18,3 +18,7 @@ init python:
     def add_1000_points(game):
         game.score += 1000
         store.player_score = game.score
+
+    def spawn_debuff(game, debuff_class):
+        novo_debuff = debuff_class(game.paddle.x, 0)
+        game.debuffs_manager.active_debuffs.append(novo_debuff)

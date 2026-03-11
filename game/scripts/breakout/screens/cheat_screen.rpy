@@ -39,6 +39,14 @@ screen cheat_screen(game):
                     $ button_name = key.replace("_", " ").title()
                     
                     textbutton button_name:
-                        action Function(spawn_cheat_pu, game, data["class"])
+                        action Function(spawn_powerup, game, data["class"])
                         text_size 20
                         text_hover_color "#FFFF00"
+                
+                null height 10
+                text "--- DEBUFFS ---" color "#FF3333" size 20 bold True
+                                
+                textbutton "Decrease Size":
+                    action Function(spawn_debuff, game, DebuffDecreaseSize)
+                    text_size 20
+                    text_hover_color "#FF3333"
