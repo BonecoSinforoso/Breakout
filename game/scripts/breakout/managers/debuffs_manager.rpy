@@ -11,7 +11,8 @@ init 1 python:
             self.spawn_timer = self.SPAWN_INTERVAL + random.uniform(0.0, 5.0)
 
         def update_and_render(self, r, width, height, st, at, delta_time, paddle, game, particles_manager):
-            self.spawn_timer -= delta_time
+            if not game.stuck and not game.winner:
+                self.spawn_timer -= delta_time
 
             if self.spawn_timer <= 0:
                 self.spawn_timer = self.SPAWN_INTERVAL + random.uniform(-2.0, 3.0)
