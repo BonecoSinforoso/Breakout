@@ -25,7 +25,11 @@ init 1 python:
                 self.x -= self.dx_speed * delta_time
 
         def render(self, r, width, height, st, at):
-            pass
+            frame_index = int(st * self.FPS) % len(self.frames) 
+            surf = self.frames[frame_index] 
+            
+            rendered = renpy.render(surf, width, height, st, at)
+            r.blit(rendered, (int(self.x - self.WIDTH / 2), int(self.y - self.HEIGHT / 2)))
 
         def apply_effect(self, game):
             pass
