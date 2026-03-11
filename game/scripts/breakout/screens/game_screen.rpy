@@ -1,6 +1,7 @@
-# define a screen principal do minigame
 screen game_screen():
     
+    key "game_menu" action ShowMenu("pause_screen")
+
     default game = GameDisplayable()
 
     add "#000000"

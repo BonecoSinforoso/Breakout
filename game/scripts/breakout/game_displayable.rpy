@@ -78,6 +78,10 @@ init python:
             delta_time = st - self.old_st
             self.old_st = st
 
+            # super importante para nao ter salto por conta do pause
+            if delta_time > 0.1:
+                delta_time = 0.016
+
             if not self.stuck and not self.winner:
                 self.time_elapsed += delta_time
 
@@ -141,7 +145,12 @@ init python:
             return r
 
         def event(self, ev, x, y, st):
+
             import pygame
+
+            if (ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE) or \
+                (ev.type == pygame.MOUSEBUTTONUP and ev.button == 3):
+                return None
 
             x = max(x, COURT_LEFT)
             x = min(x, COURT_RIGHT)
