@@ -9,33 +9,32 @@ init python:
         def __init__(self):
             renpy.Displayable.__init__(self)
 
+            # core
+            self.stuck = True
+            self.score = 0
+            self.lives = 4
+            self.winner = None
+            self.time_elapsed = 0
+            self.old_st = None
+
             # raquete
             self.paddle = Paddle(1920 / 2)
 
             # bola
             self.balls_manager = BallsManager()
-            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
             
             # shake
             self.shake_timer = 0.0
             self.shake_intensity = 0.0
 
-            # outros
+            # outras classes
             self.arsenal = Arsenal()
+            self.debuffs_manager = DebuffsManager()
+            self.particles_manager = ParticlesManager()            
             self.powerups_manager = PowerUpsManager()
-            self.particles_manager = ParticlesManager()
-            
-            self.projectiles = []
 
-            self.stuck = True
-            self.score = 0
-            self.lives = 4
-
-            self.time_elapsed = 0
-
-            self.old_st = None
-            self.winner = None
-
+            # inicializacao de outras classes
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
             self.blocks_manager = BlocksManager(COURT_LEFT, COURT_TOP, store.current_level)
         
         @property
@@ -97,10 +96,10 @@ init python:
 
             self.powerups_manager.add(new_powerups)
 
+            # updates de outras classes
             self.blocks_manager.render(r, width, height, st, at)
-
+            self.debuffs_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
             self.particles_manager.update_and_render(r, delta_time)
-
             self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
 
             # derrota/vitoria
@@ -153,6 +152,7 @@ init python:
                 self.stuck = False                
                 self.balls_manager.release_all()
 
+            # teclas
             self.arsenal.handle_input(ev, self)
             
             renpy.restart_interaction()            

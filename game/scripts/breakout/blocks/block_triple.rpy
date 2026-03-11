@@ -1,6 +1,6 @@
 init python:
 
-    class BlockTriple(BlockBase):
+    class BlockTriple(Block):
         
         WIDTH = 32
         HEIGHT = 16
