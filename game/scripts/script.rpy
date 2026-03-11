@@ -27,7 +27,7 @@ label ask_name:
 
 label choose_level:
 
-    call screen level_selector
+    call screen level_selector_screen
     
     jump play_game
 
