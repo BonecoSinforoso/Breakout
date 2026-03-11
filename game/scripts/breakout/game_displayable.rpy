@@ -57,6 +57,7 @@ init python:
 
             if self.lives <= 0:
                 self.winner = "eileen"
+                renpy.sound.play("result_lose.mp3", channel=0)
                 renpy.timeout(0)
             else:
                 self.stuck = True
@@ -107,8 +108,7 @@ init python:
             self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
 
             # derrota/vitoria
-            if self.balls_manager.is_empty() and not self.winner:
-                renpy.sound.play("result_lose.mp3", channel=0)
+            if self.balls_manager.is_empty() and not self.winner:                
                 self._lose_life()
                 renpy.timeout(0)
             elif self.blocks_manager.all_destroyed() and not self.winner:
