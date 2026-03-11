@@ -66,98 +66,87 @@ init python:
                     b_image = self.ball_fire_image
                 
                 speed = delta_time * current_ball_speed
-                old_ball_y = ball.y
 
                 if ball.stuck:
                     ball.x = paddle.x
                     ball.y = PADDLE_Y - 20
                 else:
-                    ball.x += ball.dx * speed
-                    ball.y += ball.dy * speed
+                    steps = int(math.ceil(speed / 5.0))
+                    if steps < 1: steps = 1
+                    step_speed = speed / steps
 
-                ball_top = COURT_TOP + b_h / 2
-                ball_left = COURT_LEFT + b_w / 2
-                ball_right = COURT_RIGHT - b_w / 2
+                    for _ in range(steps):
+                        ball.x += ball.dx * step_speed
+                        ball.y += ball.dy * step_speed
 
-                # Colisao com o Teto e Paredes
-                if ball.y < ball_top:
-                    ball.y = ball_top + (ball_top - ball.y)
-                    ball.dy = -ball.dy
-                    if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
+                        ball_top = COURT_TOP + b_h / 2
+                        ball_left = COURT_LEFT + b_w / 2
+                        ball_right = COURT_RIGHT - b_w / 2
 
-                if ball.x < ball_left:
-                    ball.x = ball_left + (ball_left - ball.x)
-                    ball.dx = -ball.dx
-                    if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
+                        # Colisao com o Teto e Paredes
+                        if ball.y < ball_top:
+                            ball.y = ball_top + (ball_top - ball.y)
+                            ball.dy = -ball.dy
+                            renpy.sound.play("ball_collision.wav", channel=0)
 
-                if ball.x > ball_right:
-                    ball.x = ball_right - (ball.x - ball_right)
-                    ball.dx = -ball.dx
-                    if not ball.stuck: renpy.sound.play("ball_collision.wav", channel=0)
+                        if ball.x < ball_left:
+                            ball.x = ball_left + (ball_left - ball.x)
+                            ball.dx = -ball.dx
+                            renpy.sound.play("ball_collision.wav", channel=0)
 
-                # Colisao com os Blocos
-                if not hasattr(ball, 'hit_cooldown'):
-                    ball.hit_cooldown = 0.0
-                
-                if ball.hit_cooldown > 0:
-                    ball.hit_cooldown -= delta_time
+                        if ball.x > ball_right:
+                            ball.x = ball_right - (ball.x - ball_right)
+                            ball.dx = -ball.dx
+                            renpy.sound.play("ball_collision.wav", channel=0)
 
-                score = 0
-                dropped_pups = []
-
-                if ball.hit_cooldown <= 0 or is_fireball:
-                    
-                    old_dx = ball.dx
-                    old_dy = ball.dy
-                    
-                    ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = blocks_manager.check_collision(
-                        ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
-                    )
-                    
-                    if (old_dx != ball.dx or old_dy != ball.dy) and not is_fireball:
-                        ball.hit_cooldown = 0.05
-                    
-                    if (old_dx != ball.dx or old_dy != ball.dy) or score > 0:
+                        # Colisao com os Blocos (Cooldown Removido!)
+                        old_dx = ball.dx
+                        old_dy = ball.dy
                         
-                        if is_fireball:
-                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#FF3333")
-                        elif is_giantball:
-                            particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#33FF33")
-                        else:
-                            particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
+                        ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = blocks_manager.check_collision(
+                            ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
+                        )
+                        
+                        if (old_dx != ball.dx or old_dy != ball.dy) or score > 0:
+                            if is_fireball: particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#FF3333")
+                            elif is_giantball: particles_manager.spawn_burst(ball.x, ball.y, amount=15, color="#33FF33")
+                            else: particles_manager.spawn_burst(ball.x, ball.y, amount=8, color="#FFDD00")
+                        
+                        points_earned += score
+                        new_powerups.extend(dropped_pups)
+
+                        # Colisao com a Raquete
+                        paddle_left = paddle.x - paddle.width / 2
+                        paddle_right = paddle.x + paddle.width / 2
+                        paddle_top = PADDLE_Y - paddle.height / 2
+                        paddle_bottom = PADDLE_Y + paddle.height / 2
+
+                        ball_left = ball.x - b_w / 2
+                        ball_right = ball.x + b_w / 2
+                        ball_top_b = ball.y - b_h / 2
+                        ball_bottom = ball.y + b_h / 2
+
+                        if (ball.dy > 0 and 
+                            ball_right >= paddle_left and ball_left <= paddle_right and 
+                            ball_bottom >= paddle_top and ball_top_b <= paddle_bottom):
+                            
+                            renpy.sound.play("ball_collision.wav", channel=0)
+                            
+                            dist_from_center = ball.x - paddle.x
+                            normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
+                            bounce_angle = normalized_dist * 1.047 
+                            
+                            ball.dx = math.sin(bounce_angle) * 0.707
+                            ball.dy = -abs(math.cos(bounce_angle) * 0.707)
+
+                            # garante que a bola nunca grude dentro da raquete!
+                            ball.y = paddle_top - b_h / 2
+                            
+                            particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
+                        
+                        if ball.y > 1080:
+                            break
                 
-                points_earned += score
-                new_powerups.extend(dropped_pups)
-
-                # Colisao com a Raquete
-                paddle_left = paddle.x - paddle.width / 2
-                paddle_right = paddle.x + paddle.width / 2
-                paddle_top = PADDLE_Y - paddle.height / 2
-                paddle_bottom = PADDLE_Y + paddle.height / 2
-
-                ball_left = ball.x - b_w / 2
-                ball_right = ball.x + b_w / 2
-                ball_top = ball.y - b_h / 2
-                ball_bottom = ball.y + b_h / 2
-
-                if (ball.dy > 0 and 
-                    ball_right >= paddle_left and ball_left <= paddle_right and 
-                    ball_bottom >= paddle_top and ball_top <= paddle_bottom):
-                    
-                    renpy.sound.play("ball_collision.wav", channel=0)
-                    
-                    dist_from_center = ball.x - paddle.x
-                    normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
-                    bounce_angle = normalized_dist * 1.047 
-                    
-                    ball.dx = math.sin(bounce_angle) * 0.707
-                    ball.dy = -abs(math.cos(bounce_angle) * 0.707)
-
-                    ball.hit_cooldown = 0.05
-
-                    particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
-
-                # Renderiza a bola
                 ball_img = renpy.render(b_image, width, height, st, at)
                 r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
 
@@ -167,7 +156,6 @@ init python:
                 
                 if not ball.stuck:
                     ball.history.append((ball.x, ball.y))
-                
                     if len(ball.history) > 6:
                         ball.history.pop(0)
                 
@@ -182,8 +170,7 @@ init python:
                         elif is_giantball: trail_color = "#ffffff"
                         
                         canvas.rect(trail_color, (int(hx - size/2), int(hy - size/2), size, size))
-
-                # destruicao da bola
+                
                 if ball.y > 1080:
                     self.balls.remove(ball)
 
