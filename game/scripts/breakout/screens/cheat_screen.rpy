@@ -13,7 +13,7 @@ screen cheat_screen(game):
             vbox:
                 spacing 10
                 text "--- CHEATS ---" color "#33FF33" size 24 bold True
-                text "(Aperte 'C' para fechar)" color "#AAAAAA" size 14
+                text "(Press 'C' to close)" color "#AAAAAA" size 14
                 
                 null height 10
                                 
@@ -27,7 +27,7 @@ screen cheat_screen(game):
                     text_size 20
                     text_hover_color "#FF3333"
                 
-                textbutton "+1000 Pontos":
+                textbutton "+1000 Points":
                     action Function(add_1000_points, game)
                     text_size 20
                     text_hover_color "#33CCFF"
