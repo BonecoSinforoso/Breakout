@@ -39,6 +39,7 @@ init 1 python:
                     
                     debuff.apply_effect(game)
                     self.active_debuffs.remove(debuff)
+                    renpy.sound.play("debuff_collected.wav", channel=4)
                     particles_manager.spawn_burst(debuff.x, PADDLE_Y, amount=20, speed_min=150, speed_max=400)
                     
                 elif debuff.y > 1080:

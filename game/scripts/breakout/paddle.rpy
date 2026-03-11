@@ -16,7 +16,6 @@ init python:
             self.width = self.default_width
             self.image = self.default_image
                         
-            # Dois timers independentes
             self.timer_increase_size = 0.0
             self.timer_decrease_size = 0.0
 
@@ -55,7 +54,7 @@ init python:
                     self.size_level = 0
                     self._update_sprite()
 
-        # --- RESETA TUDO (Ex: ao perder uma vida) ---
+        # reseta tudo
         def reset_effects(self):
             self.timer_increase_size = 0
             self.timer_decrease_size = 0
@@ -88,7 +87,6 @@ init python:
                 
             self._update_sprite()
 
-        # --- RENDERIZAÇÃO ---
         def render(self, r, width, height, st, at):
             pi = renpy.render(self.image, width, height, st, at)
             r.blit(pi, (int(self.x - self.width / 2), int(self.y - self.height / 2)))
