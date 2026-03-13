@@ -9,6 +9,9 @@ init 1 python:
             self.active_debuffs = []
             self.spawn_timer = random.uniform(5.0, 15.0)
 
+        def add(self, new_debuffs: list) -> None:
+            self.active_debuffs.extend(new_debuffs)
+
         def update_and_render(self, r, width: int, height: int, st: float, at: float, delta_time: float, paddle, game, particles_manager) -> None:
             if not game.stuck and not game.winner:
                 self.spawn_timer -= delta_time

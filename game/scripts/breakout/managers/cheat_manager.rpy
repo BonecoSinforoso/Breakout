@@ -21,4 +21,4 @@ init python:
 
     def spawn_debuff(game, debuff_class):
         new_debuff = debuff_class(game.paddle.x, 0)
-        game.debuffs_manager.active_debuffs.append(new_debuff)
+        game.debuffs_manager.add([new_debuff])
