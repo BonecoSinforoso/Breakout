@@ -12,4 +12,4 @@ init python:
         ]
 
         def apply_effect(self, game):
-            game.arsenal.ammo_piercing += 1
+            game.projectiles_manager.ammo_piercing += 1

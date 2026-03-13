@@ -28,7 +28,7 @@ init python:
             self.shake_intensity = 0.0
 
             # outras classes
-            self.arsenal = Arsenal()
+            self.projectiles_manager = ProjectilesManager()
             self.debuffs_manager = DebuffsManager()
             self.particles_manager = ParticlesManager()            
             self.powerups_manager = PowerUpsManager()
@@ -88,7 +88,7 @@ init python:
 
             self.paddle.update(delta_time)
 
-            projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.blocks_manager)
+            projectile_points = self.projectiles_manager.update_and_render(r, width, height, st, at, delta_time, self.blocks_manager)
             self.score += projectile_points
 
             # raquete
@@ -162,7 +162,7 @@ init python:
                 self.balls_manager.release_all()
 
             # teclas
-            self.arsenal.handle_input(ev, self)
+            self.projectiles_manager.handle_input(ev, self)
             
             renpy.restart_interaction()            
 

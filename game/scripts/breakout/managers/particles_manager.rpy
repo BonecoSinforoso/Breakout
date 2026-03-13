@@ -26,13 +26,13 @@ init python:
         def update_and_render(self, r, delta_time):
             canvas = r.canvas()
             
-            for p in self.particles[:]:
+            for particle in self.particles[:]:
                 particle.x += particle.dx * delta_time
                 particle.y += particle.dy * delta_time
                 particle.lifetime -= delta_time
 
                 if particle.lifetime <= 0:
-                    self.particles.remove(p)
+                    self.particles.remove(particle)
                 else:
                     size = max(1, int(6 * (particle.lifetime / particle.max_lifetime)))
                     canvas.rect(particle.color, (int(particle.x - size/2), int(particle.y - size/2), size, size))

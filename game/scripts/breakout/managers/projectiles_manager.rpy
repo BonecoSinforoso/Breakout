@@ -1,11 +1,11 @@
-# TODO: ate q ponto ele nn seria um manager dos projeteis?
-init python:
+# gerenciador dos projeteis e municao
+init 1 python:
 
     import pygame
 
-    class Arsenal:
+    class ProjectilesManager:
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.ammo_basic = 0
             self.ammo_piercing = 0
             self.cd_basic = 0.0
@@ -13,7 +13,7 @@ init python:
             
             self.projectiles = []
 
-        def update_and_render(self, r, width, height, st, at, delta_time, blocks_manager):
+        def update_and_render(self, r, width: int, height: int, st: float, at: float, delta_time: float, blocks_manager) -> int:
             if self.cd_basic > 0: self.cd_basic -= delta_time
             if self.cd_piercing > 0: self.cd_piercing -= delta_time
 
@@ -23,25 +23,23 @@ init python:
                 projectile.update(delta_time)
                 projectile.render(r, width, height, st, at)
                 
+                # saiu da tela por cima
                 if projectile.y < 0:
                     self.projectiles.remove(projectile)
                     continue
                                 
-                p_left = projectile.x - projectile.width / 2
-                p_right = projectile.x + projectile.width / 2
-                p_top = projectile.y - projectile.height / 2
-                p_bottom = projectile.y + projectile.height / 2
-
                 hit_something = False
 
                 for block in blocks_manager.blocks:
                     if not block.active: continue
                     
-                    b_left, b_top = block.x, block.y
-                    b_right, b_bottom = block.x + block.WIDTH, block.y + block.HEIGHT
+                    block_center_x = block.x + block.WIDTH / 2
+                    block_center_y = block.y + block.HEIGHT / 2
                     
-                    if (p_right >= b_left and p_left <= b_right and 
-                        p_bottom >= b_top and p_top <= b_bottom):
+                    if Physics.is_aabb_collision(
+                        projectile.x, projectile.y, projectile.width, projectile.height,
+                        block_center_x, block_center_y, block.WIDTH, block.HEIGHT
+                    ):
                         
                         renpy.sound.play("ball_collision.wav", channel=0)
                         
@@ -60,7 +58,7 @@ init python:
 
             return points_earned
 
-        def handle_input(self, ev, game):
+        def handle_input(self, ev, game) -> None:
             if game.stuck or game.winner: return
 
             if ev.type == pygame.KEYDOWN:
@@ -70,9 +68,9 @@ init python:
                         self.ammo_basic -= 1
                         self.cd_basic = 0.3
                         renpy.sound.play("projectile_basic.wav", channel=3)
-                        frames = ["images/projectiles/projectile_basic_{:02d}.png".format(i) for i in range(4)]
                         
-                        self.projectiles.append(Projectile(game.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 500, False, frames))
+                        new_proj = ProjectilesFactory.create_basic(game.paddle.x, PADDLE_Y - PADDLE_HEIGHT)
+                        self.projectiles.append(new_proj)
 
                 # tiro perfurante (tecla X)
                 elif ev.key == pygame.K_x:
@@ -80,6 +78,6 @@ init python:
                         self.ammo_piercing -= 1
                         self.cd_piercing = 0.6
                         renpy.sound.play("projectile_piercing.wav", channel=3)
-                        frames = ["images/projectiles/projectile_piercing_{:02d}.png".format(i) for i in range(4)]
                         
-                        self.projectiles.append(Projectile(game.paddle.x, PADDLE_Y - PADDLE_HEIGHT, 600, True, frames))
+                        new_proj = ProjectilesFactory.create_piercing(game.paddle.x, PADDLE_Y - PADDLE_HEIGHT)
+                        self.projectiles.append(new_proj)
