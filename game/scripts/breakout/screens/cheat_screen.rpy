@@ -33,6 +33,7 @@ screen cheat_screen(game):
                     text_hover_color "#33CCFF"
 
                 null height 10
+
                 text "--- POWER-UPS ---" color "#33FF33" size 20 bold True
                                 
                 for key, data in PowerUpsFactory.CATALOG.items():
@@ -44,6 +45,7 @@ screen cheat_screen(game):
                         text_hover_color "#FFFF00"
                 
                 null height 10
+                
                 text "--- DEBUFFS ---" color "#FF3333" size 20 bold True
                                 
                 textbutton "Decrease Size":

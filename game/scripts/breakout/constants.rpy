@@ -1,3 +1,4 @@
+# TODO: variaveis do tempo de spawn do debuff
 init python:
 
     PADDLE_HEIGHT = 32

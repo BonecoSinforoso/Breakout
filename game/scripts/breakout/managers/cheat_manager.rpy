@@ -1,8 +1,8 @@
 init python:
 
-    def spawn_powerup(game, pu_class):
-        new_pu = pu_class(game.paddle.x, PADDLE_Y - 150)
-        game.powerups_manager.add([new_pu])
+    def spawn_powerup(game, powerup_class):
+        new_powerup = powerup_class(game.paddle.x, PADDLE_Y - 150)
+        game.powerups_manager.add([new_powerup])
 
     def force_win(game):
         for block in game.blocks_manager.blocks:
@@ -20,5 +20,5 @@ init python:
         store.player_score = game.score
 
     def spawn_debuff(game, debuff_class):
-        novo_debuff = debuff_class(game.paddle.x, 0)
-        game.debuffs_manager.active_debuffs.append(novo_debuff)
+        new_debuff = debuff_class(game.paddle.x, 0)
+        game.debuffs_manager.active_debuffs.append(new_debuff)
