@@ -1,12 +1,13 @@
 # maestro do jogo
-# TODO: ficou imenso de novo (refatorar)
 init python:
 
     import math
+    import random
+    import pygame
 
     class GameDisplayable(renpy.Displayable):
 
-        def __init__(self):
+        def __init__(self) -> None:
             renpy.Displayable.__init__(self)
 
             # core
@@ -14,40 +15,39 @@ init python:
             self.score = 0
             self.lives = 4
             self.winner = None
-            self.time_elapsed = 0
+            self.time_elapsed = 0.0
             self.old_st = None
 
             # raquete
-            self.paddle = Paddle(1920 / 2)
+            center_x = (COURT_LEFT + COURT_RIGHT) / 2.0
+            self.paddle = Paddle(center_x)
 
-            # bola
+            # managers
             self.balls_manager = BallsManager()
-            
-            # shake
-            self.shake_timer = 0.0
-            self.shake_intensity = 0.0
-
-            # outras classes
-            self.arsenal = Arsenal()
+            self.projectiles_manager = ProjectilesManager()
             self.debuffs_manager = DebuffsManager()
             self.particles_manager = ParticlesManager()            
             self.powerups_manager = PowerUpsManager()
-
-            # inicializacao de outras classes
-            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
             self.blocks_manager = BlocksManager(COURT_LEFT, COURT_TOP, store.current_level)
+            
+            # efeitos de tela
+            self.shake_timer = 0.0
+            self.shake_intensity = 0.0
+
+            # setup inicial
+            self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
         
         @property
-        def formatted_time(self):
+        def formatted_time(self) -> str:
             minutes = int(self.time_elapsed) // 60
             seconds = int(self.time_elapsed) % 60
             return "{:02d}:{:02d}".format(minutes, seconds)
 
-        def visit(self):
+        def visit(self) -> list:
             block_frames = self.blocks_manager.get_all_frames()
             return [self.paddle.image, self.balls_manager.ball_default_image, self.balls_manager.ball_fire_image, self.balls_manager.ball_giant_image] + block_frames
 
-        def _lose_life(self):
+        def _lose_life(self) -> None:
             self.lives -= 1
             self.powerups_manager.clear()
             self.reset_powerup_effects()
@@ -66,11 +66,11 @@ init python:
             self.balls_manager.clear()
             self.balls_manager.spawn_ball(self.paddle.x, PADDLE_Y - 20, stuck=True)
 
-        def reset_powerup_effects(self):
+        def reset_powerup_effects(self) -> None:
             self.paddle.reset_effects()
             self.balls_manager.reset_effects()
 
-        def render(self, width, height, st, at):
+        def render(self, width: int, height: int, st: float, at: float):
             r = renpy.Render(width, height)
 
             if self.old_st is None:
@@ -79,21 +79,21 @@ init python:
             delta_time = st - self.old_st
             self.old_st = st
 
-            # super importante para nao ter salto por conta do pause
+            # trava de seguranca contra saltos de fisica por lag ou drag da janela
             if delta_time > 0.1:
                 delta_time = 0.016
 
             if not self.stuck and not self.winner:
                 self.time_elapsed += delta_time
 
+            # Update de posicoes e resolucao basica
             self.paddle.update(delta_time)
-
-            projectile_points = self.arsenal.update_and_render(r, width, height, st, at, delta_time, self.blocks_manager)
+            projectile_points = self.projectiles_manager.update_and_render(r, width, height, st, at, delta_time, self.blocks_manager)
             self.score += projectile_points
 
-            # raquete
             self.paddle.render(r, width, height, st, at)
 
+            # Física principal (Bolas vs Blocos vs Raquete)
             points_earned, new_powerups = self.balls_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self.blocks_manager, self.particles_manager)
             
             self.score += points_earned
@@ -101,13 +101,13 @@ init python:
 
             self.powerups_manager.add(new_powerups)
 
-            # updates de outras classes
+            # Update dos outros gerentes visuais
             self.blocks_manager.render(r, width, height, st, at)
             self.debuffs_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
-            self.particles_manager.update_and_render(r, delta_time)
+            self.particles_manager.update_and_render(r, width, height, st, at, delta_time)
             self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
 
-            # derrota/vitoria
+            # Checagem de Fim de Jogo
             if self.balls_manager.is_empty() and not self.winner:                
                 self._lose_life()
                 renpy.timeout(0)
@@ -120,7 +120,6 @@ init python:
 
                 store.bonus_lives = bonus_lives
                 store.bonus_time = bonus_time
-
                 store.player_score += bonus_lives
                 store.player_score += bonus_time
 
@@ -128,9 +127,8 @@ init python:
 
             renpy.redraw(self, 0)
 
+            # screen shake
             if self.shake_timer > 0:
-                import random
-                
                 self.shake_timer -= delta_time
                 self.shake_intensity *= 0.9
                 
@@ -144,25 +142,21 @@ init python:
 
             return r
 
-        def event(self, ev, x, y, st):
-
-            import pygame
-
+        def event(self, ev, x: float, y: float, st: float):
+            
             if (ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE) or \
                 (ev.type == pygame.MOUSEBUTTONUP and ev.button == 3):
                 return None
 
-            x = max(x, COURT_LEFT)
-            x = min(x, COURT_RIGHT)
-            self.paddle.x = x
+            self.paddle.move_to(x)
 
-            # botao do mouse
+            # botao esquerdo do mouse
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
                 self.stuck = False                
                 self.balls_manager.release_all()
 
-            # teclas
-            self.arsenal.handle_input(ev, self)
+            # teclas de atalho
+            self.projectiles_manager.handle_input(ev, self)
             
             renpy.restart_interaction()            
 

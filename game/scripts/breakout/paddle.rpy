@@ -1,9 +1,8 @@
-init python:
+init 1 python:
 
     class Paddle:
 
-        def __init__(self, x):
-            
+        def __init__(self, x: float) -> None:
             self.x = x
             self.y = PADDLE_Y
                         
@@ -19,7 +18,13 @@ init python:
             self.timer_increase_size = 0.0
             self.timer_decrease_size = 0.0
 
-        def _update_sprite(self):
+        def move_to(self, target_x: float) -> None:
+            limit_left = COURT_LEFT + self.width / 2
+            limit_right = COURT_RIGHT - self.width / 2
+            
+            self.x = max(limit_left, min(target_x, limit_right))
+
+        def _update_sprite(self) -> None:
             if self.size_level == -2:
                 self.width = 32
                 self.image = Image("images/paddles/paddle_red_00.png")
@@ -36,8 +41,7 @@ init python:
                 self.width = 96
                 self.image = Image("images/paddles/paddle_red_04.png")
 
-        # --- ATUALIZAÇÃO POR FRAME ---
-        def update(self, delta_time):
+        def update(self, delta_time: float) -> None:
             # Conta o tempo do Buff
             if self.timer_increase_size > 0:
                 self.timer_increase_size -= delta_time
@@ -54,39 +58,32 @@ init python:
                     self.size_level = 0
                     self._update_sprite()
 
-        # reseta tudo
-        def reset_effects(self):
-            self.timer_increase_size = 0
-            self.timer_decrease_size = 0
+        def reset_effects(self) -> None:
+            self.timer_increase_size = 0.0
+            self.timer_decrease_size = 0.0
             self.size_level = 0
             self._update_sprite()
 
-        # --- APLICA O BUFF ---
-        def increase_size(self, duration=10.0):
-            # Se estava encolhido, cancela o debuff e volta ao normal
+        def increase_size(self, duration: float = 10.0) -> None:
             if self.timer_decrease_size > 0:
                 self.timer_decrease_size = 0
                 self.size_level = 0
             else:
-                # Aumenta até no máximo o nível 2 (sprite 04)
                 self.size_level = min(2, self.size_level + 1)
                 self.timer_increase_size = duration
                 
             self._update_sprite()
 
-        # --- APLICA O DEBUFF ---
-        def decrease_size(self, duration=10.0):
-            # Se estava gigante, cancela o buff e volta ao normal
+        def decrease_size(self, duration: float = 10.0) -> None:
             if self.timer_increase_size > 0:
                 self.timer_increase_size = 0
                 self.size_level = 0
             else:
-                # Diminui até no máximo o nível -2 (sprite 00)
                 self.size_level = max(-2, self.size_level - 1)
                 self.timer_decrease_size = duration
                 
             self._update_sprite()
 
-        def render(self, r, width, height, st, at):
+        def render(self, r, width: int, height: int, st: float, at: float) -> None:
             pi = renpy.render(self.image, width, height, st, at)
             r.blit(pi, (int(self.x - self.width / 2), int(self.y - self.height / 2)))

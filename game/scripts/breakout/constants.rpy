@@ -1,3 +1,4 @@
+# TODO: variaveis do tempo de spawn do debuff
 init python:
 
     PADDLE_HEIGHT = 32
@@ -11,3 +12,7 @@ init python:
     COURT_RIGHT = 1920 / 2 + 320
 
     BALL_SPEED_DEFAULT = 550
+
+    SCREEN_HEIGHT = 1080
+
+    SUB_STEPPING = 5.0

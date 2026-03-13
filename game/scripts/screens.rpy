@@ -99,8 +99,7 @@ style gui_text:
 
 style button:
     properties gui.button_properties("button")
-    hover_sound "audio/hover.flac" # marrom
-    # activate_sound "audio/hover.flac" # ainda nao achei um bom
+    hover_sound "audio/ui/hover.flac" # marrom
 
 style button_text is gui_text:
     properties gui.text_properties("button")

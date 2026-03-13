@@ -11,8 +11,8 @@ init 1 python:
         def __init__(self, x, y):
             self.x = x
             self.y = y
-            self.dy = 150 # Velocidade de queda 
-            self.dx_speed = 120 # Velocidade de perseguição 
+            self.dy = 150
+            self.dx_speed = 120
             
             self.frames = [Transform(Image(p), size=(self.WIDTH, self.HEIGHT)) for p in self.SPRITES]
 

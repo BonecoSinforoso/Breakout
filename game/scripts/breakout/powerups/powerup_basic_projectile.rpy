@@ -12,4 +12,4 @@ init python:
         ]
 
         def apply_effect(self, game):
-            game.arsenal.ammo_basic += 5
+            game.projectiles_manager.ammo_basic += 5
