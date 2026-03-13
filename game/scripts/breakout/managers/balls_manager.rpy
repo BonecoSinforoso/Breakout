@@ -128,6 +128,7 @@ init 1 python:
                         ball.history.pop(0)
 
                 trail_solid = self.trail_default
+                
                 if is_fireball: trail_solid = self.trail_fire
                 elif is_giantball: trail_solid = self.trail_giant
 

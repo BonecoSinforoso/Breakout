@@ -76,7 +76,6 @@ init 1 python:
                     hit_occurred = True
                     
                     if not is_fireball:
-                        # usa a classe de fisica para resolver os vetores
                         ball_x, ball_y, ball_dx, ball_dy = Physics.resolve_aabb_bounce(
                             ball_x, ball_y, ball_w, ball_h, ball_dx, ball_dy, col["dx"], col["dy"]
                         )

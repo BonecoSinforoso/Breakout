@@ -27,12 +27,12 @@ init python:
             canvas = r.canvas()
             
             for p in self.particles[:]:
-                p.x += p.dx * delta_time
-                p.y += p.dy * delta_time
-                p.lifetime -= delta_time
+                particle.x += particle.dx * delta_time
+                particle.y += particle.dy * delta_time
+                particle.lifetime -= delta_time
 
-                if p.lifetime <= 0:
+                if particle.lifetime <= 0:
                     self.particles.remove(p)
                 else:
-                    size = max(1, int(6 * (p.lifetime / p.max_lifetime)))
-                    canvas.rect(p.color, (int(p.x - size/2), int(p.y - size/2), size, size))
+                    size = max(1, int(6 * (particle.lifetime / particle.max_lifetime)))
+                    canvas.rect(particle.color, (int(particle.x - size/2), int(particle.y - size/2), size, size))
