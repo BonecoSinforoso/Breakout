@@ -1,4 +1,5 @@
 # gerenciador das bolas
+# TODO: desfazer abreviacoes
 init 1 python:
 
     import math
@@ -83,30 +84,15 @@ init 1 python:
                         ball.x += ball.dx * step_speed
                         ball.y += ball.dy * step_speed
 
-                        ball_top = COURT_TOP + b_h / 2
-                        ball_left = COURT_LEFT + b_w / 2
-                        ball_right = COURT_RIGHT - b_w / 2
-
                         # colisao com teto e paredes
-                        if ball.y < ball_top:
-                            ball.y = ball_top + (ball_top - ball.y)
-                            ball.dy = -ball.dy
-                            renpy.sound.play("ball_collision.wav", channel=0)
-
-                        if ball.x < ball_left:
-                            ball.x = ball_left + (ball_left - ball.x)
-                            ball.dx = -ball.dx
-                            renpy.sound.play("ball_collision.wav", channel=0)
-
-                        if ball.x > ball_right:
-                            ball.x = ball_right - (ball.x - ball_right)
-                            ball.dx = -ball.dx
+                        ball.x, ball.y, ball.dx, ball.dy, hit_wall = Physics.resolve_wall_collision(
+                            ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, COURT_LEFT, COURT_RIGHT, COURT_TOP
+                        )
+                        if hit_wall:
                             renpy.sound.play("ball_collision.wav", channel=0)
 
                         # colisao com blocos
-                        old_dx = ball.dx
-                        old_dy = ball.dy
-                        
+                        old_dx, old_dy = ball.dx, ball.dy
                         ball.x, ball.y, ball.dx, ball.dy, score, dropped_pups = blocks_manager.check_collision(
                             ball.x, ball.y, b_w, b_h, ball.dx, ball.dy, is_fireball, is_giantball
                         )
@@ -120,26 +106,14 @@ init 1 python:
                         new_powerups.extend(dropped_pups)
 
                         # colisao com a raquete
-                        paddle_left = paddle.x - paddle.width / 2
-                        paddle_right = paddle.x + paddle.width / 2
-                        paddle_top = PADDLE_Y - paddle.height / 2
-                        paddle_bottom = PADDLE_Y + paddle.height / 2
-
-                        ball_left_b = ball.x - b_w / 2
-                        ball_right_b = ball.x + b_w / 2
-                        ball_top_b = ball.y - b_h / 2
-                        ball_bottom_b = ball.y + b_h / 2
-
-                        if (ball.dy > 0 and 
-                            ball_right_b >= paddle_left and ball_left_b <= paddle_right and 
-                            ball_bottom_b >= paddle_top and ball_top_b <= paddle_bottom):
+                        if ball.dy > 0 and Physics.is_aabb_collision(ball.x, ball.y, b_w, b_h, paddle.x, PADDLE_Y, paddle.width, PADDLE_HEIGHT):
                             
                             renpy.sound.play("ball_collision.wav", channel=0)
                             
                             ball.dx, ball.dy = Physics.calculate_paddle_bounce(ball.x, paddle.x, paddle.width)
-
-                            ball.y = paddle_top - b_h / 2
-                            particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
+                            ball.y = PADDLE_Y - PADDLE_HEIGHT / 2 - b_h / 2
+                            
+                            particles_manager.spawn_burst(ball.x, ball.y + b_h / 2, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
 
                         if ball.y > SCREEN_HEIGHT:
                             break
