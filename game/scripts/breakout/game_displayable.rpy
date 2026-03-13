@@ -152,9 +152,7 @@ init python:
                 (ev.type == pygame.MOUSEBUTTONUP and ev.button == 3):
                 return None
 
-            x = max(x, COURT_LEFT)
-            x = min(x, COURT_RIGHT)
-            self.paddle.x = x
+            self.paddle.move_to(x)
 
             # botao do mouse
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
