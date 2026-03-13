@@ -104,7 +104,7 @@ init python:
             # updates de outras classes
             self.blocks_manager.render(r, width, height, st, at)
             self.debuffs_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
-            self.particles_manager.update_and_render(r, delta_time)
+            self.particles_manager.update_and_render(r, width, height, st, at, delta_time)
             self.powerups_manager.update_and_render(r, width, height, st, at, delta_time, self.paddle, self, self.particles_manager)
 
             # derrota/vitoria

@@ -1,11 +1,11 @@
-# TODO: suporte a tamanhos diferentes
-init python:
+# classe do projetil base
+init 1 python:
 
     class Projectile:
         
         ANIM_FPS = 4
 
-        def __init__(self, x, y, speed, is_piercing, frames_list):
+        def __init__(self, x: float, y: float, speed: float, is_piercing: bool, frames_list: list) -> None:
             self.x = x
             self.y = y
             self.speed = speed
@@ -15,10 +15,10 @@ init python:
             self.width = 16
             self.height = 16
 
-        def update(self, delta_time):
+        def update(self, delta_time: float) -> None:
             self.y -= self.speed * delta_time
 
-        def render(self, r, width, height, st, at):
+        def render(self, r, width: int, height: int, st: float, at: float) -> None:
             num_frames = len(self.frames)
             duration = num_frames / float(self.ANIM_FPS)
             t = st % duration
