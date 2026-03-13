@@ -126,7 +126,7 @@ init python:
                 renpy.sound.play("ball_collision.wav", channel=0)
 
                 if destroyed and random.random() < block.DROP_CHANCE:
-                    new_pu = PowerUpsManager.get_random_drop(block.x + block.WIDTH/2, block.y + block.HEIGHT/2)
+                    new_pu = PowerUpsFactory.get_random_powerup(block.x + block.WIDTH/2, block.y + block.HEIGHT/2)
                     if new_pu is not None:
                         spawned_powerups.append(new_pu)
 

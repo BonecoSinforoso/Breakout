@@ -35,7 +35,7 @@ screen cheat_screen(game):
                 null height 10
                 text "--- POWER-UPS ---" color "#33FF33" size 20 bold True
                                 
-                for key, data in PowerUpsManager.CATALOG.items():
+                for key, data in PowerUpsFactory.CATALOG.items():
                     $ button_name = key.replace("_", " ").title()
                     
                     textbutton button_name:

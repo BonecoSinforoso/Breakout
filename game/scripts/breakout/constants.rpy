@@ -11,3 +11,5 @@ init python:
     COURT_RIGHT = 1920 / 2 + 320
 
     BALL_SPEED_DEFAULT = 550
+
+    SCREEN_HEIGHT = 1080

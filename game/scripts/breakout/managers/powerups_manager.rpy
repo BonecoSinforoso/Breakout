@@ -1,86 +1,39 @@
-# gerente dos power ups
-# TODO: separar o factory do manager
+# Gerenciador do ciclo de vida e colisao dos power ups na tela
 init 1 python:
     
-    import random
-
     class PowerUpsManager:
 
-        CATALOG = {
-            "increase_size": {
-                "class": PowerUpIncreaseSize, 
-                "active": True
-            },
-            "slow_down": {
-                "class": PowerUpSlowDown, 
-                "active": True
-            },
-            "extra_ball": {
-                "class": PowerUpExtraBall,
-                "active": True
-            },
-            "fire_ball": {
-                "class": PowerUpFireball,
-                "active": True
-            },
-            "giant_ball": {
-                "class": PowerUpGiantBall,
-                "active": True
-            },
-            "basic_projectile": {
-                "class": PowerUpBasicProjectile,
-                "active": True
-            },
-            "piercing_projectile": {
-                "class": PowerUpPiercingProjectile,
-                "active": True
-            }
-        }
-
-        @classmethod
-        def get_random_drop(cls, x, y):
-            active_list = [data["class"] for key, data in cls.CATALOG.items() if data["active"]]
-            
-            if not active_list:
-                return None
-            
-            chosen_powerup = random.choice(active_list)
-            
-            return chosen_powerup(x, y)
-            
-        @classmethod
-        def set_active(cls, powerup_name, is_active):            
-            if powerup_name in cls.CATALOG:
-                cls.CATALOG[powerup_name]["active"] = is_active
-
-        def __init__(self):
+        def __init__(self) -> None:
             self.active_powerups = []
 
-        def add(self, new_powerups):
+        def add(self, new_powerups: list) -> None:
             self.active_powerups.extend(new_powerups)
 
-        def clear(self):
+        def clear(self) -> None:
             self.active_powerups.clear()
 
-        def update_and_render(self, r, width, height, st, at, delta_time, paddle, game, particles_manager):
-            for pu in self.active_powerups[:]:
-                pu.update(delta_time)
-                pu.render(r, width, height, st, at)
+        def update_and_render(self, r, width: int, height: int, st: float, at: float, delta_time: float, paddle, game, particles_manager) -> None:
+            for powerup in self.active_powerups[:]:
+                powerup.update(delta_time)
+                powerup.render(r, width, height, st, at)
                 
-                pu_left = pu.x - pu.WIDTH / 2
-                pu_right = pu.x + pu.WIDTH / 2
-                pu_bottom = pu.y + pu.HEIGHT / 2
+                powerup_left = powerup.x - powerup.WIDTH / 2
+                powerup_right = powerup.x + powerup.WIDTH / 2
+                powerup_bottom = powerup.y + powerup.HEIGHT / 2
                 
                 paddle_left = paddle.x - paddle.width / 2
                 paddle_right = paddle.x + paddle.width / 2
                 paddle_top = PADDLE_Y - PADDLE_HEIGHT / 2
                 paddle_bottom = PADDLE_Y + PADDLE_HEIGHT / 2
                 
-                if (pu_right >= paddle_left and pu_left <= paddle_right and 
-                    pu_bottom >= paddle_top and pu.y - pu.HEIGHT/2 <= paddle_bottom):
-                    pu.apply_effect(game)
-                    self.active_powerups.remove(pu)
+                # checagem de colisao
+                if (powerup_right >= paddle_left and powerup_left <= paddle_right and 
+                    powerup_bottom >= paddle_top and powerup.y - powerup.HEIGHT / 2 <= paddle_bottom):
+                    
+                    powerup.apply_effect(game)
+                    self.active_powerups.remove(powerup)
                     renpy.sound.play("powerup_collected.wav", channel=1)
-                    particles_manager.spawn_burst(pu.x, PADDLE_Y, amount=20, speed_min=150, speed_max=400)
-                elif pu.y > 1080:
-                    self.active_powerups.remove(pu)
+                    particles_manager.spawn_burst(powerup.x, PADDLE_Y, amount=20, speed_min=150, speed_max=400)
+                
+                elif powerup.y > SCREEN_HEIGHT:
+                    self.active_powerups.remove(powerup)
