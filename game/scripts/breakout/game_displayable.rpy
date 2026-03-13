@@ -116,7 +116,7 @@ init python:
                 self.winner = "player"
 
                 bonus_lives = 100 * self.lives
-                bonus_time = max(0, 300 - int(self.time_elapsed))
+                bonus_time = max(0, 3000 - int(self.time_elapsed * 10))
 
                 store.bonus_lives = bonus_lives
                 store.bonus_time = bonus_time
