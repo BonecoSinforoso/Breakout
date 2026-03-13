@@ -1,5 +1,5 @@
-﻿# TODO: mudar aparencia da Eileen, colocar uma sprite minha
-# vai conter as labels e vozes
+﻿# contem todas as labels do jogo
+# TODO: mudar aparencia da Eileen, colocar uma sprite minha
 
 label start:
 
@@ -53,7 +53,7 @@ label play_game:
 
     if _return == "eileen":
         show eileen concerned
-        voice "audio/voices/sinfas/you_lose.ogg"            
+        voice "audio/voices/sinfas/you_lose.ogg"
         eileen "You lose."
         
         "[player_name] you scored [player_score] points"
