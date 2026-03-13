@@ -1,10 +1,12 @@
-init python:
+# gerenciador das bolas
+init 1 python:
 
     import math
+    import random
 
     class BallsManager:
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.balls = []
             self.timer_slow_down = 0.0
             self.timer_fire_ball = 0.0
@@ -18,31 +20,29 @@ init python:
             self.trail_fire = Solid("#FF3333")
             self.trail_giant = Solid("#ffffff")
 
-        def spawn_ball(self, x, y, dx=0, dy=0, stuck=False):
-            import random
-                        
+        def spawn_ball(self, x: float, y: float, dx: float = 0, dy: float = 0, stuck: bool = False) -> None:
             if dx == 0 and dy == 0:
                 dx = 0.5 * random.choice([-1, 1])
                 dy = -0.5
                 
             self.balls.append(Ball(x, y, dx, dy, BALL_SPEED_DEFAULT, stuck=stuck))
 
-        def clear(self):
+        def clear(self) -> None:
             self.balls.clear()
 
-        def is_empty(self):
+        def is_empty(self) -> bool:
             return len(self.balls) == 0
 
-        def release_all(self):
+        def release_all(self) -> None:
             for ball in self.balls:
                 ball.stuck = False
 
-        def reset_effects(self):
+        def reset_effects(self) -> None:
             self.timer_slow_down = 0.0
             self.timer_fire_ball = 0.0
             self.timer_giant_ball = 0.0
 
-        def update_and_render(self, r, width, height, st, at, delta_time, paddle, blocks_manager, particles_manager):
+        def update_and_render(self, r, width: int, height: int, st: float, at: float, delta_time: float, paddle, blocks_manager, particles_manager) -> tuple:
             if self.timer_slow_down > 0: self.timer_slow_down = max(0, self.timer_slow_down - delta_time)
             if self.timer_fire_ball > 0: self.timer_fire_ball = max(0, self.timer_fire_ball - delta_time)
             if self.timer_giant_ball > 0: self.timer_giant_ball = max(0, self.timer_giant_ball - delta_time)
@@ -75,7 +75,7 @@ init python:
                     ball.x = paddle.x
                     ball.y = PADDLE_Y - 20
                 else:
-                    steps = int(math.ceil(speed / 5.0))
+                    steps = int(math.ceil(speed / SUB_STEPPING))
                     if steps < 1: steps = 1
                     step_speed = speed / steps
 
@@ -87,6 +87,7 @@ init python:
                         ball_left = COURT_LEFT + b_w / 2
                         ball_right = COURT_RIGHT - b_w / 2
 
+                        # colisao com teto e paredes
                         if ball.y < ball_top:
                             ball.y = ball_top + (ball_top - ball.y)
                             ball.dy = -ball.dy
@@ -102,6 +103,7 @@ init python:
                             ball.dx = -ball.dx
                             renpy.sound.play("ball_collision.wav", channel=0)
 
+                        # colisao com blocos
                         old_dx = ball.dx
                         old_dy = ball.dy
                         
@@ -117,6 +119,7 @@ init python:
                         points_earned += score
                         new_powerups.extend(dropped_pups)
 
+                        # colisao com a raquete
                         paddle_left = paddle.x - paddle.width / 2
                         paddle_right = paddle.x + paddle.width / 2
                         paddle_top = PADDLE_Y - paddle.height / 2
@@ -133,20 +136,15 @@ init python:
                             
                             renpy.sound.play("ball_collision.wav", channel=0)
                             
-                            dist_from_center = ball.x - paddle.x
-                            normalized_dist = max(-1.0, min(1.0, dist_from_center / (paddle.width / 2)))
-                            bounce_angle = normalized_dist * 1.047 
-                            
-                            ball.dx = math.sin(bounce_angle) * 0.707
-                            ball.dy = -abs(math.cos(bounce_angle) * 0.707)
+                            ball.dx, ball.dy = Physics.calculate_paddle_bounce(ball.x, paddle.x, paddle.width)
 
                             ball.y = paddle_top - b_h / 2
-                            
                             particles_manager.spawn_burst(ball.x, paddle_top, amount=5, color="#00FFFF", speed_min=100, speed_max=300)
 
-                        if ball.y > 1080:
+                        if ball.y > SCREEN_HEIGHT:
                             break
 
+                # trails
                 if not hasattr(ball, 'history'):
                     ball.history = []                
                 
@@ -167,10 +165,11 @@ init python:
                         trail_rend = renpy.render(trail_solid, size, size, st, at)
                         r.blit(trail_rend, (int(hx - size/2), int(hy - size/2)))
                 
+                # render da bola
                 ball_img = renpy.render(b_image, width, height, st, at)
                 r.blit(ball_img, (int(ball.x - b_w / 2), int(ball.y - b_h / 2)))
 
-                if ball.y > 1080:
+                if ball.y > SCREEN_HEIGHT:
                     self.balls.remove(ball)
 
             return points_earned, new_powerups

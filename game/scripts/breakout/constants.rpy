@@ -14,3 +14,5 @@ init python:
     BALL_SPEED_DEFAULT = 550
 
     SCREEN_HEIGHT = 1080
+
+    SUB_STEPPING = 5.0
