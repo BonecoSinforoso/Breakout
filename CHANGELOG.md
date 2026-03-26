@@ -25,3 +25,6 @@ v1.0.1.0
 * correcao: som de hover nos botoes
 * balanceamento: bonus de pontos por segundo restante de 1 -> 10
 * otimizacao: no sistema de particulas
+
+v1.0.2.0
+* correcao: movimento da bola quando o pause era ativado
