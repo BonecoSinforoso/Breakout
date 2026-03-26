@@ -80,8 +80,10 @@ init python:
             self.old_st = st
 
             # trava de seguranca contra saltos de fisica por lag ou drag da janela
-            if delta_time > 0.1:
-                delta_time = 0.016
+            if renpy.context_nesting_level() > 0 or delta_time > 0.1:
+                delta_time = 0.0
+            elif delta_time > 0.033:
+                delta_time = 0.033
 
             if not self.stuck and not self.winner:
                 self.time_elapsed += delta_time
